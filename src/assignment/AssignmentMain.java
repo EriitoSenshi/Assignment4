@@ -1,26 +1,49 @@
 package assignment;
 
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 import javafx.application.Application;
 import javafx.scene.Node;
+import javafx.scene.Scene;
+import javafx.scene.control.Button;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.shape.Circle;
 import javafx.stage.Stage;
 
 /**
  *
- * @author cstuser
+ * @author hany albouz
  */
 public class AssignmentMain extends Application {
-
+    
+    
+    
     @Override
     public void start(Stage primaryStage) {
+        AssetManager.preloadAllAssets();
         AnchorPane startMenu = new AnchorPane();
+        startMenu.setMinWidth(1280);
+        startMenu.setMinHeight(720);
+        startMenu.setBackground(AssetManager.getStartBackgroundImage());
         AnchorPane game = new AnchorPane();
+        game.setMinWidth(1280);
+        game.setMinHeight(720);
+        game.setBackground(AssetManager.getBackgroundImage());
+        Circle player = new Circle();
+        Scene start = new Scene(startMenu);
+        Scene gamePlay = new Scene(game);
+        Button startButton = new Button("START GAME");
+        startButton.setLayoutX(565);
+        startButton.setMinHeight(200);
+        startButton.setMinWidth(300);
+        startButton.setOpacity(0);
+        addToPane(startButton, startMenu);
+        
+        startButton.setOnAction((event) -> {
+            primaryStage.setScene(gamePlay);
+        });
+        
+        primaryStage.setTitle("Space invaders!");
+        primaryStage.setScene(start);
+        primaryStage.show();
 
     }
 
@@ -36,7 +59,7 @@ public class AssignmentMain extends Application {
 
     }
     
-    public void lives(){
+    public void loseLives(){
         
     }
     
@@ -44,9 +67,6 @@ public class AssignmentMain extends Application {
         
     }
 
-    /**
-     * @param args the command line arguments
-     */
     public static void main(String[] args) {
         launch(args);
     }
