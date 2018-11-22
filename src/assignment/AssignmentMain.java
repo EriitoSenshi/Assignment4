@@ -1,10 +1,12 @@
 package assignment;
 
 import java.util.ArrayList;
+import javafx.animation.AnimationTimer;
 import javafx.application.Application;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
@@ -15,6 +17,9 @@ import javafx.stage.Stage;
  * @author hany albouz
  */
 public class AssignmentMain extends Application {
+
+    double lastFrameTime = 0.0;
+    Circle player = new Circle();
 
     @Override
     public void start(Stage primaryStage) {
@@ -39,8 +44,8 @@ public class AssignmentMain extends Application {
         game.setBackground(AssetManager.getBackgroundImage());
 
         //Creating the player and enemies
-        Circle player = new Circle();
-        player(player, game);
+        Circle playerWeapon = new Circle();
+        createPlayer(player, playerWeapon, game);
         createEnemies(game);
 
         Scene start = new Scene(startMenu);
@@ -62,7 +67,17 @@ public class AssignmentMain extends Application {
         pane.getChildren().add(node);
     }
 
-    public void player(Circle c, AnchorPane pane) {
+    public void movePlayer(MouseEvent me) {
+
+        new AnimationTimer() {
+            @Override
+            public void handle(long now) {
+                player.setCenterX(me.getX());
+            }
+        }.start();
+    }
+
+    public void createPlayer(Circle c, Circle r, AnchorPane pane) {
         c.setCenterX(40);
         c.setCenterY(600);
         c.setRadius(25);
@@ -72,22 +87,59 @@ public class AssignmentMain extends Application {
 
     public void createEnemies(AnchorPane pane) {
         ArrayList<Circle> enemies = new ArrayList<>();
+        ArrayList<Vector2D> enemiesVelocityList = new ArrayList<>();
+        lastFrameTime = 0.0f;
+        long initialTime = System.nanoTime();
         for (int i = 0; i < 4; i++) {
             for (int j = 1; j <= 8; j++) {
                 enemies.add(new Circle(320 + (j * 70), 40 + (i * 70), 25, Color.YELLOW));
+                enemiesVelocityList.add(new Vector2D(100, 1));
             }
         }
         for (int i = 0; i < enemies.size(); i++) {
             addToPane(enemies.get(i), pane);
         }
+        new AnimationTimer() {
+            @Override
+            public void handle(long now) {
+                double currentTime = (now - initialTime) / 1000000000.0;
+                double frameDeltaTime = currentTime - lastFrameTime;
+                lastFrameTime = currentTime;
+
+                for (int i = 0; i < enemies.size(); i++) {
+                    Circle c = enemies.get(i);
+                    Vector2D position = new Vector2D(c.getCenterX(), c.getCenterY());
+                    Vector2D v = enemiesVelocityList.get(i);
+                    position = position.add(v.mult(frameDeltaTime));
+                    c.setCenterX(position.getX());
+                    c.setCenterY(position.getY());
+
+                    if (enemies.get(0).getCenterX() - c.getRadius() < 0) {
+                        v.setX(Math.abs(v.getX()));
+                    }
+                    if (enemies.get(7).getCenterX() + c.getRadius() > 1280) {
+                        v.setX(-Math.abs(v.getX()));
+                    }
+                }
+            }
+        }.start();
+
     }
 
-    public void loseLives() {
+    public void loseLife() {
 
     }
 
-    public void loseGame() {
+    public void loseGame(Stage stage, Scene scene) {
+        stage.setScene(scene);
+    }
 
+    public void playerShoot(Circle c) {
+        AssetManager.preloadAllAssets();
+    }
+
+    public void enemyShoot(Circle c) {
+        AssetManager.preloadAllAssets();
     }
 
     public static void main(String[] args) {

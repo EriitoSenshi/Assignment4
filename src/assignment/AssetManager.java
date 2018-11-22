@@ -2,7 +2,6 @@ package assignment;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.Random;
 import javafx.scene.image.Image;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundImage;
@@ -24,7 +23,6 @@ public class AssetManager {
     static private AudioClip hitPlayerSound = null;
     static private AudioClip playerShootingSound = null;
     static private AudioClip enemyShootingSound = null;
-    
 
     static private String fileURL(String relativePath) {
         return new File(relativePath).toURI().toString();
@@ -39,7 +37,7 @@ public class AssetManager {
                         BackgroundRepeat.NO_REPEAT,
                         BackgroundPosition.DEFAULT,
                         BackgroundSize.DEFAULT));
-        
+
         Image background = new Image(fileURL("./assets/images/background.png"));
         backgroundImage = new Background(
                 new BackgroundImage(background,
@@ -66,17 +64,10 @@ public class AssetManager {
     static public Background getBackgroundImage() {
         return backgroundImage;
     }
-    
+
     static public Background getStartBackgroundImage() {
         return startBackgroundImage;
     }
-
-    static public ImagePattern getRandomPlanet() {
-        Random rng = new Random();
-        int i = rng.nextInt(sprites.size());
-        return sprites.get(i);
-    }
-
 
     static public Media getBackgroundMusic() {
         return backgroundMusic;
