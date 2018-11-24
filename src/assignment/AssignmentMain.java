@@ -82,14 +82,14 @@ public class AssignmentMain extends Application {
                         }
                     }
                 }
+
+                game.setOnMouseClicked(event -> {
+                    playerShoot();
+                });
             }
         }.start();
 
         //Shooting
-        game.setOnMouseClicked(event -> {
-            playerShoot();
-        });
-
         game.setOnMouseMoved(event -> {
             player.setCenterX(event.getX());
         });
@@ -158,6 +158,7 @@ public class AssignmentMain extends Application {
 
         playerWeaponPosition = new Vector2D(circlePosX, circlePosY);
         playerWeaponVelocity = new Vector2D(0.0f, -300.0f);
+        addToPane(playerWeapons.get(i), game);
 
     }
 
