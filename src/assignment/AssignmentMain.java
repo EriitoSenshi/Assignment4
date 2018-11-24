@@ -17,18 +17,23 @@ import javafx.stage.Stage;
  */
 public class AssignmentMain extends Application {
 
-    double lastFrameTime = 0.0f;
-    long initialTime = System.nanoTime();
+    double lastFrameTime = 0.0;
+
     Circle player = new Circle();
+
     ArrayList<Circle> playerWeapons = new ArrayList<>();
-    AnchorPane startMenu = new AnchorPane();
-    AnchorPane game = new AnchorPane();
     Vector2D playerWeaponVelocity;
     Vector2D playerWeaponPosition;
+    ArrayList<Circle> enemies = new ArrayList<>();
+    ArrayList<Vector2D> enemiesVelocityList = new ArrayList<>();
+    AnchorPane startMenu = new AnchorPane();
+    AnchorPane game = new AnchorPane();
 
     @Override
     public void start(Stage primaryStage) {
         AssetManager.preloadAllAssets();
+        lastFrameTime = 0.0f;
+        long initialTime = System.nanoTime();
 
         //Creating start menu
         startMenu.setMinWidth(1280);
@@ -50,9 +55,43 @@ public class AssignmentMain extends Application {
         createPlayer(game);
         createEnemies(game);
 
+        //Initialize
+        new AnimationTimer() {
+            @Override
+            public void handle(long now) {
+                double currentTime = (now - initialTime) / 1000000000.0;
+                double frameDeltaTime = currentTime - lastFrameTime;
+                lastFrameTime = currentTime;
+
+                for (int i = 0; i < enemies.size(); i++) {
+                    Circle c = enemies.get(i);
+                    Vector2D position = new Vector2D(c.getCenterX(), c.getCenterY());
+                    Vector2D v = enemiesVelocityList.get(i);
+                    position = position.add(v.mult(frameDeltaTime));
+                    c.setCenterX(position.getX());
+                    c.setCenterY(position.getY());
+
+                    if (enemies.get(i).getCenterX() - c.getRadius() < 0) {
+                        for (int j = 0; j < enemies.size(); j++) {
+                            enemiesVelocityList.get(j).setX(Math.abs(enemiesVelocityList.get(j).getX()));
+                        }
+                    }
+                    if (enemies.get(i).getCenterX() + c.getRadius() > 1280) {
+                        for (int j = 0; j < enemies.size(); j++) {
+                            enemiesVelocityList.get(j).setX(-Math.abs(enemiesVelocityList.get(j).getX()));
+                        }
+                    }
+                }
+            }
+        }.start();
+
         //Shooting
         game.setOnMouseClicked(event -> {
             playerShoot();
+        });
+
+        game.setOnMouseMoved(event -> {
+            player.setCenterX(event.getX());
         });
 
         Scene start = new Scene(startMenu);
@@ -87,45 +126,16 @@ public class AssignmentMain extends Application {
     }
 
     public void createEnemies(AnchorPane pane) {
-        ArrayList<Circle> enemies = new ArrayList<>();
-        ArrayList<Vector2D> enemiesVelocityList = new ArrayList<>();
-        for (int i = 0; i < 4; i++) {
+
+        for (int k = 0; k < 4; k++) {
             for (int j = 1; j <= 8; j++) {
-                enemies.add(new Circle(320 + (j * 70), 40 + (i * 70), 25, Color.YELLOW));
-                enemiesVelocityList.add(new Vector2D(300, 1));
+                enemies.add(new Circle(320 + (j * 70), 40 + (k * 70), 25, Color.YELLOW));
+                enemiesVelocityList.add(new Vector2D(100.0f, 1.0f));
             }
         }
-        for (int i = 0; i < enemies.size(); i++) {
-            addToPane(enemies.get(i), pane);
+        for (int k = 0; k < enemies.size(); k++) {
+            addToPane(enemies.get(k), pane);
         }
-        new AnimationTimer() {
-            @Override
-            public void handle(long now) {
-                double currentTime = (now - initialTime) / 1000000000.0;
-                double frameDeltaTime = currentTime - lastFrameTime;
-                lastFrameTime = currentTime;
-
-                for (int i = 0; i < enemies.size(); i++) {
-                    Circle c = enemies.get(i);
-                    Vector2D position = new Vector2D(c.getCenterX(), c.getCenterY());
-                    Vector2D v = enemiesVelocityList.get(i);
-                    position = position.add(v.mult(frameDeltaTime));
-                    c.setCenterX(position.getX());
-                    c.setCenterY(position.getY());
-
-                    if (enemies.get(i).getCenterX() - c.getRadius() < 0) {
-                        for (int j = 0; j < enemies.size(); j++) {
-                            enemiesVelocityList.get(j).setX(Math.abs(enemiesVelocityList.get(j).getX()));
-                        }
-                    }
-                    if (enemies.get(i).getCenterX() + c.getRadius() > 1280) {
-                        for (int j = 0; j < enemies.size(); j++) {
-                            enemiesVelocityList.get(j).setX(-Math.abs(enemiesVelocityList.get(j).getX()));
-                        }
-                    }
-                }
-            }
-        }.start();
 
     }
 
@@ -138,32 +148,17 @@ public class AssignmentMain extends Application {
     }
 
     int i = -1;
+
     public void playerShoot() {
         playerWeapons.add(new Circle(player.getCenterX(), player.getCenterY() - player.getRadius(), 5, Color.GREEN));
         i++;
-        addToPane(playerWeapons.get(i), game);
+
         double circlePosX = playerWeapons.get(i).getCenterX();
         double circlePosY = playerWeapons.get(i).getCenterY();
 
         playerWeaponPosition = new Vector2D(circlePosX, circlePosY);
         playerWeaponVelocity = new Vector2D(0.0f, -300.0f);
-        Vector2D acceleration = new Vector2D(0,0);
 
-        new AnimationTimer() {
-            @Override
-            public void handle(long now) {
-
-                double currentTime = (now - initialTime) / 1000000000.0;
-                double frameDeltaTime = currentTime - lastFrameTime;
-                lastFrameTime = currentTime;
-
-                Vector2D frameAcceleration = acceleration.mult(frameDeltaTime);
-                playerWeaponVelocity = playerWeaponVelocity.add(frameAcceleration);
-                playerWeaponPosition = playerWeaponPosition.add(playerWeaponVelocity.mult(frameDeltaTime));
-                playerWeapons.get(i).setCenterX(playerWeaponPosition.getX());
-                playerWeapons.get(i).setCenterY(playerWeaponPosition.getY());
-            }
-        }.start();
     }
 
     public void enemyShoot(Circle c) {
