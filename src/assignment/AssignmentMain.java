@@ -46,6 +46,9 @@ public class AssignmentMain extends Application {
         startButton.setMinWidth(300);
         startButton.setOpacity(0);
         addToPane(startButton, startMenu);
+        if (startMusic == null) {
+            startMusic = new MediaPlayer(AssetManager.getStartBackgroundMusic());
+        }
 
         startMusic.play();
 
