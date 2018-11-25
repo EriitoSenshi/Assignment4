@@ -18,6 +18,7 @@ public class AssetManager {
     static private Background backgroundImage = null;
     static private ArrayList<ImagePattern> sprites = new ArrayList<>();
 
+    static private Media startBackgroundMusic = null;
     static private Media backgroundMusic = null;
     static private AudioClip hitEnemySound = null;
     static private AudioClip hitPlayerSound = null;
@@ -50,13 +51,14 @@ public class AssetManager {
         sprites.add(new ImagePattern(new Image(fileURL("./assets/images/venus.png"))));
         sprites.add(new ImagePattern(new Image(fileURL("./assets/images/earth.png"))));
         sprites.add(new ImagePattern(new Image(fileURL("./assets/images/jupiter.png"))));
-        sprites.add(new ImagePattern(new Image(fileURL("./assets/images/saturn.png"))));
+        sprites.add(new ImagePattern(new Image(fileURL("./assets/images/saturn.png"))));*/
 
         // Preload all music tracks
         backgroundMusic = new Media(fileURL("./assets/music/backgroundMusic.mp3"));
+        startBackgroundMusic = new Media(fileURL("./assets/music/startBackgroundMusic.mp3"));
 
         // Preload all sound effects
-        hitEnemySound = new AudioClip(fileURL("./assets/soundfx/newPlanet.wav"));
+        /*hitEnemySound = new AudioClip(fileURL("./assets/soundfx/newPlanet.wav"));
         playerShootingSound = new AudioClip(fileURL("./assets/soundfx/shooting.wav"));
         enemyShootingSound = new AudioClip(fileURL("./assets/soundfx/...wav"));*/
     }
@@ -71,6 +73,10 @@ public class AssetManager {
 
     static public Media getBackgroundMusic() {
         return backgroundMusic;
+    }
+    
+    static public Media getStartBackgroundMusic() {
+        return startBackgroundMusic;
     }
 
     static public AudioClip getNewPlanetSound() {
