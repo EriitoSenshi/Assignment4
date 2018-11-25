@@ -27,14 +27,16 @@ public class AssignmentMain extends Application {
     AnchorPane startMenu = new AnchorPane();
     AnchorPane game = new AnchorPane();
 
-    MediaPlayer startMusic = new MediaPlayer(AssetManager.getStartBackgroundMusic());
-    MediaPlayer gameMusic = new MediaPlayer(AssetManager.getBackgroundMusic());
+    MediaPlayer startMusic;
+    MediaPlayer gameMusic;
 
     @Override
     public void start(Stage primaryStage) {
         AssetManager.preloadAllAssets();
         lastFrameTime = 0.0f;
         long initialTime = System.nanoTime();
+        startMusic = new MediaPlayer(AssetManager.getStartBackgroundMusic());
+        gameMusic = new MediaPlayer(AssetManager.getBackgroundMusic());
 
         //Creating start menu
         startMenu.setMinWidth(1280);
@@ -46,10 +48,6 @@ public class AssignmentMain extends Application {
         startButton.setMinWidth(300);
         startButton.setOpacity(0);
         addToPane(startButton, startMenu);
-        if (startMusic == null) {
-            startMusic = new MediaPlayer(AssetManager.getStartBackgroundMusic());
-        }
-
         startMusic.play();
 
         //Creating game
@@ -151,10 +149,10 @@ public class AssignmentMain extends Application {
 
     }
 
-    public void loseGame(Stage stage, Scene scene) {
+    public void loseGame(Stage stage, Scene scene, MediaPlayer start, MediaPlayer game) {
         stage.setScene(scene);
-        gameMusic.stop();
-        startMusic.play();
+        game.stop();
+        start.play();
     }
 
     int i = -1;
