@@ -4,8 +4,6 @@ import java.util.ArrayList;
 import javafx.animation.AnimationTimer;
 import javafx.application.Application;
 import javafx.scene.Node;
-import javafx.scene.Scene;
-import javafx.scene.control.Button;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.media.MediaPlayer;
@@ -27,43 +25,20 @@ public class AssignmentMain extends Application {
 
     AnchorPane game = new AnchorPane();
 
-    MediaPlayer startMusic;
-    MediaPlayer gameMusic;
-
     int playerWeapon = -1;
 
     @Override
     public void start(Stage primaryStage) {
-        AssetManager.preloadAllAssets();
         lastFrameTime = 0.0f;
         long initialTime = System.nanoTime();
-        startMusic = new MediaPlayer(AssetManager.getStartBackgroundMusic());
-        gameMusic = new MediaPlayer(AssetManager.getBackgroundMusic());
-        
-        Scene gamePlay = new Scene(game);
         
         //Creating start menu
-        Button startButton = new Button("");
         MenuPane menuPane = new MenuPane();
-        Scene startMenu = new Scene(menuPane);
-        menuPane.makeMenuPane(menuPane, primaryStage, startMenu, startButton);
-        startMusic.play();
-
-        //Creating game
-        game.setMinWidth(1280);
-        game.setMinHeight(720);
-        game.setBackground(AssetManager.getBackgroundImage());
+        menuPane.makeMenuPane(primaryStage);
 
         //Player and enemy methods
         createPlayer(game);
         createEnemies(game);
-
-        //Switching from start menu to game
-        startButton.setOnAction((event) -> {
-            primaryStage.setScene(gamePlay);
-            startMusic.stop();
-            gameMusic.play();
-        });
 
         //Initialize
         new AnimationTimer() {
@@ -105,7 +80,6 @@ public class AssignmentMain extends Application {
 
         //Start
         primaryStage.setTitle("Space invaders!");
-        primaryStage.setScene(startMenu);
         primaryStage.show();
 
     }
