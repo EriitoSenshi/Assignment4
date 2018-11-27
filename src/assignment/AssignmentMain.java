@@ -29,6 +29,8 @@ public class AssignmentMain extends Application {
 
     MediaPlayer startMusic;
     MediaPlayer gameMusic;
+    
+    int playerWeapon = -1;
 
     @Override
     public void start(Stage primaryStage) {
@@ -59,6 +61,16 @@ public class AssignmentMain extends Application {
         createPlayer(game);
         createEnemies(game);
 
+        Scene start = new Scene(startMenu);
+        Scene gamePlay = new Scene(game);
+
+        //Switching from start menu to game
+        startButton.setOnAction((event) -> {
+            primaryStage.setScene(gamePlay);
+            startMusic.stop();
+            gameMusic.play();
+        });
+
         //Initialize
         new AnimationTimer() {
             @Override
@@ -67,6 +79,7 @@ public class AssignmentMain extends Application {
                 double frameDeltaTime = currentTime - lastFrameTime;
                 lastFrameTime = currentTime;
 
+                //Moving enemies
                 for (GameObject enemy : enemies) {
                     enemy.update(frameDeltaTime);
 
@@ -82,26 +95,18 @@ public class AssignmentMain extends Application {
                     }
                 }
 
+                //Shooting
                 game.setOnMouseClicked(event -> {
                     createPlayerWeapon();
-                    playerWeapons.get(i).update(frameDeltaTime);
+                    playerWeapons.get(playerWeapon).update(frameDeltaTime);
                 });
+
             }
         }.start();
 
-        //Shooting
+        //Moving player
         game.setOnMouseMoved(event -> {
             player.setCenterX(event.getX());
-        });
-
-        Scene start = new Scene(startMenu);
-        Scene gamePlay = new Scene(game);
-
-        //Switching from game
-        startButton.setOnAction((event) -> {
-            primaryStage.setScene(gamePlay);
-            startMusic.stop();
-            gameMusic.play();
         });
 
         //Start
@@ -149,16 +154,17 @@ public class AssignmentMain extends Application {
 
     }
 
-    public void loseGame(Stage stage, Scene scene, MediaPlayer start, MediaPlayer game) {
-        stage.setScene(scene);
+    public void loseGame(MediaPlayer start, MediaPlayer game) {
         game.stop();
         start.play();
     }
 
-    int i = -1;
+    public void restart() {
+
+    }
 
     public void createPlayerWeapon() {
-        i++;
+        playerWeapon++;
 
         double circlePosX = player.getCenterX();
         double circlePosY = player.getCenterY() - player.getRadius();
@@ -167,8 +173,8 @@ public class AssignmentMain extends Application {
         Vector2D playerWeaponVelocity = new Vector2D(0.0f, -300.0f);
         Vector2D playerWeaponAcceleration = new Vector2D(0, 0);
         playerWeapons.add(new GameObject(playerWeaponPosition, playerWeaponVelocity, playerWeaponAcceleration, 5));
-        playerWeapons.get(i).getCircle().setFill(Color.GREEN);
-        addToPane(playerWeapons.get(i).getCircle(), game);
+        playerWeapons.get(playerWeapon).getCircle().setFill(Color.GREEN);
+        addToPane(playerWeapons.get(playerWeapon).getCircle(), game);
 
     }
 
