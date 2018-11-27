@@ -9,6 +9,9 @@ package assignment;
  *
  * @author ganer
  */
-public class Player {
-    
+public class Player extends GameObject {
+
+    public Player(Vector2D position, Vector2D velocity, Vector2D acceleration, double radius) {
+        super(position, velocity, acceleration, 0);
+    }
 }

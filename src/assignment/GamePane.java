@@ -5,10 +5,12 @@
  */
 package assignment;
 
+import javafx.scene.layout.Pane;
+
 /**
  *
  * @author ganer
  */
-public class GamePane {
-    
+public class GamePane extends Pane {
+
 }

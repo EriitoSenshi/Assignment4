@@ -1,6 +1,5 @@
 package assignment;
 
-import javafx.scene.layout.AnchorPane;
 import javafx.scene.shape.Circle;
 
 public class GameObject {

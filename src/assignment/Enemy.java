@@ -9,6 +9,9 @@ package assignment;
  *
  * @author ganer
  */
-public class Enemy {
-    
+public class Enemy extends GameObject {
+
+    public Enemy(Vector2D position, Vector2D velocity, Vector2D acceleration, double radius) {
+        super(position, velocity, acceleration, 0);
+    }
 }

@@ -7,6 +7,7 @@ import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.Pane;
 import javafx.scene.media.MediaPlayer;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
@@ -24,12 +25,11 @@ public class AssignmentMain extends Application {
     ArrayList<GameObject> playerWeapons = new ArrayList<>();
     ArrayList<GameObject> enemies = new ArrayList<>();
 
-    AnchorPane startMenu = new AnchorPane();
     AnchorPane game = new AnchorPane();
 
     MediaPlayer startMusic;
     MediaPlayer gameMusic;
-    
+
     int playerWeapon = -1;
 
     @Override
@@ -39,17 +39,14 @@ public class AssignmentMain extends Application {
         long initialTime = System.nanoTime();
         startMusic = new MediaPlayer(AssetManager.getStartBackgroundMusic());
         gameMusic = new MediaPlayer(AssetManager.getBackgroundMusic());
-
+        
+        Scene gamePlay = new Scene(game);
+        
         //Creating start menu
-        startMenu.setMinWidth(1280);
-        startMenu.setMinHeight(720);
-        startMenu.setBackground(AssetManager.getStartBackgroundImage());
         Button startButton = new Button("");
-        startButton.setLayoutX(565);
-        startButton.setMinHeight(200);
-        startButton.setMinWidth(300);
-        startButton.setOpacity(0);
-        addToPane(startButton, startMenu);
+        MenuPane menuPane = new MenuPane();
+        Scene startMenu = new Scene(menuPane);
+        menuPane.makeMenuPane(menuPane, primaryStage, startMenu, startButton);
         startMusic.play();
 
         //Creating game
@@ -60,9 +57,6 @@ public class AssignmentMain extends Application {
         //Player and enemy methods
         createPlayer(game);
         createEnemies(game);
-
-        Scene start = new Scene(startMenu);
-        Scene gamePlay = new Scene(game);
 
         //Switching from start menu to game
         startButton.setOnAction((event) -> {
@@ -111,16 +105,16 @@ public class AssignmentMain extends Application {
 
         //Start
         primaryStage.setTitle("Space invaders!");
-        primaryStage.setScene(start);
+        primaryStage.setScene(startMenu);
         primaryStage.show();
 
     }
 
-    public void addToPane(Node node, AnchorPane pane) {
+    public void addToPane(Node node, Pane pane) {
         pane.getChildren().add(node);
     }
 
-    public void removeFromPane(Node node, AnchorPane pane) {
+    public void removeFromPane(Node node, Pane pane) {
         pane.getChildren().remove(node);
     }
 

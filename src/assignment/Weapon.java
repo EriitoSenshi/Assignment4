@@ -9,6 +9,9 @@ package assignment;
  *
  * @author ganer
  */
-public class Weapon {
-    
+public class Weapon extends GameObject {
+
+    public Weapon(Vector2D position, Vector2D velocity, Vector2D acceleration, double radius) {
+        super(position, velocity, acceleration, 0);
+    }
 }
