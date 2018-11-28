@@ -18,4 +18,10 @@ public class Weapon extends GameObject {
     public void movePlayerWeapon(Weapon playerWeapon, double time) {
         playerWeapon.update(time);
     }
+
+    public void checkPlayerCollision(Weapon playerWeapon, GamePane gamePane) {
+        if (playerWeapon.getCircle().getCenterY() - playerWeapon.getCircle().getRadius() < 0){
+            gamePane.getChildren().remove(playerWeapon.getCircle());
+        }
+    }
 }
