@@ -19,9 +19,16 @@ import javafx.stage.Stage;
 public class GamePane extends Pane {
 
     ArrayList<Enemy> enemies = new ArrayList<>();
+    ArrayList<Weapon> playerWeapons = new ArrayList<>();
+    Player player = new Player();
+    Weapon pw;
+    int playerWeapon = -1;
     double lastFrameTime = 0.0;
 
-    public void gameLoop() {
+    public void gameLoop(GamePane gamePane, Stage stage) {
+        AssetManager.preloadAllAssets();
+        Scene game = new Scene(gamePane);
+        makeGamePane(game, stage, gamePane);
         lastFrameTime = 0.0f;
         long initialTime = System.nanoTime();
         new AnimationTimer() {
@@ -30,23 +37,28 @@ public class GamePane extends Pane {
                 double currentTime = (now - initialTime) / 1000000000.0;
                 double frameDeltaTime = currentTime - lastFrameTime;
                 lastFrameTime = currentTime;
+                for (Enemy enemy : enemies) {
+                    enemy.moveEnemies(enemy, frameDeltaTime, enemies);
+                }
+                game.setOnMouseClicked(event -> {
+                    playerWeapon++;
+                    makePlayerWeapon(gamePane, frameDeltaTime);
+                });
             }
         }.start();
     }
 
-    public void makeGamePane(Stage stage, GamePane gamePane) {
-        AssetManager.preloadAllAssets();
+    public void makeGamePane(Scene game, Stage stage, GamePane gamePane) {
         gamePane.setMinWidth(1280);
         gamePane.setMinHeight(720);
         gamePane.setBackground(AssetManager.getBackgroundImage());
-        Scene game = new Scene(gamePane);
         stage.setScene(game);
         player(gamePane, game);
         createEnemies(gamePane, game);
     }
 
     public void player(GamePane gamePane, Scene game) {
-        Player player = new Player();
+
         player.makePlayer(gamePane, player);
         game.setOnMouseMoved(event -> {
             player.movePlayer(event, player);
@@ -71,11 +83,19 @@ public class GamePane extends Pane {
         }
     }
 
-    public void playerWeapon() {
+    public void makePlayerWeapon(GamePane gamePane, double time) {
+        Vector2D pwPosition = new Vector2D(player.getCenterX(), player.getCenterY() - player.getRadius());
+        Vector2D pwVelocity = new Vector2D(0.0f, -100.0f);
+        Vector2D pwAcceleration = new Vector2D(0, 0);
+        if (pw == null) {
+            pw = new Weapon(pwPosition, pwVelocity, pwAcceleration, 5);
+            gamePane.getChildren().add(pw.getCircle());
+            pw.update(time);
+        }
 
     }
 
-    public void enemyWeapon() {
+    public void makeEnemyWeapon(GamePane gamePane) {
 
     }
 }

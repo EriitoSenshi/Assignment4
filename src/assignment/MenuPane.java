@@ -50,7 +50,7 @@ public class MenuPane extends Pane {
         startMusic.stop();
         gameMusic.play();
         GamePane gamePane = new GamePane();
-        gamePane.makeGamePane(stage, gamePane);
+        gamePane.gameLoop(gamePane, stage);
     }
 
 }

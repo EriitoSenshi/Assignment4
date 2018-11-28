@@ -7,11 +7,15 @@ package assignment;
 
 /**
  *
- * @author ganer
+ * @author hanyalbouz
  */
 public class Weapon extends GameObject {
 
     public Weapon(Vector2D position, Vector2D velocity, Vector2D acceleration, double radius) {
-        super(position, velocity, acceleration, 0);
+        super(position, velocity, acceleration, radius);
+    }
+
+    public void movePlayerWeapon(Weapon playerWeapon, double time) {
+        playerWeapon.update(time);
     }
 }

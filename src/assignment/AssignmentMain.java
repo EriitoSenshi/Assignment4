@@ -3,7 +3,6 @@ package assignment;
 import java.util.ArrayList;
 import javafx.application.Application;
 import javafx.scene.paint.Color;
-import javafx.scene.shape.Circle;
 import javafx.stage.Stage;
 
 /**
@@ -12,23 +11,12 @@ import javafx.stage.Stage;
  */
 public class AssignmentMain extends Application {
 
-    double lastFrameTime = 0.0;
-    Circle player = new Circle();
-
-    ArrayList<GameObject> playerWeapons = new ArrayList<>();
-    ArrayList<GameObject> enemies = new ArrayList<>();
-
-    int playerWeapon = -1;
-
     @Override
     public void start(Stage primaryStage) {
-        
 
         //Creating start menu
         MenuPane menuPane = new MenuPane();
         menuPane.makeMenuPane(primaryStage);
-
-
 
         //Start
         primaryStage.setTitle("Space invaders!");
@@ -36,7 +24,7 @@ public class AssignmentMain extends Application {
 
     }
 
-    public void createPlayerWeapon() {
+    /*public void createPlayerWeapon() {
         playerWeapon++;
 
         double circlePosX = player.getCenterX();
@@ -48,8 +36,7 @@ public class AssignmentMain extends Application {
         playerWeapons.add(new GameObject(playerWeaponPosition, playerWeaponVelocity, playerWeaponAcceleration, 5));
         playerWeapons.get(playerWeapon).getCircle().setFill(Color.GREEN);
 
-    }
-
+    }*/
     public static void main(String[] args) {
         launch(args);
     }
