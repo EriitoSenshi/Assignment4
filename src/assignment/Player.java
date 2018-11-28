@@ -6,12 +6,11 @@
 package assignment;
 
 import javafx.scene.input.MouseEvent;
-import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 
 /**
  *
- * @author ganer
+ * @author hanyalbouz
  */
 public class Player extends Circle {
 
@@ -19,12 +18,18 @@ public class Player extends Circle {
         player.setRadius(25);
         player.setCenterX(40);
         player.setCenterY(600);
-        player.setFill(Color.BLUE);
+        player.setFill(AssetManager.getPlayerSprite());
         gamePane.getChildren().add(player);
-        
+
     }
-    
-    public void movePlayer(MouseEvent event, Player player){
+
+    public void movePlayer(MouseEvent event, Player player) {
         player.setCenterX(event.getX());
+        if (player.getCenterX() - player.getRadius() < 0) {
+            player.setCenterX(25);
+        }
+        if (player.getCenterX() + player.getRadius() > 1280) {
+            player.setCenterX(1255);
+        }
     }
 }

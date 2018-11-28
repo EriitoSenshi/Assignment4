@@ -19,9 +19,13 @@ public class Weapon extends GameObject {
         playerWeapon.update(time);
     }
 
-    public void checkPlayerCollision(Weapon playerWeapon, GamePane gamePane) {
-        if (playerWeapon.getCircle().getCenterY() - playerWeapon.getCircle().getRadius() < 0){
-            gamePane.getChildren().remove(playerWeapon.getCircle());
+    public void setPlayerWeapon(Weapon playerWeapon, Player player) {
+        playerWeapon.setPosition(new Vector2D(player.getCenterX(), player.getCenterY() - player.getRadius()));
+    }
+
+    public void checkPlayerWeaponCollision(Weapon pw, GamePane gamePane) {
+        if (pw.getCircle().getCenterY() - pw.getCircle().getRadius() < 0) {
+            pw.getCircle().setVisible(false);
         }
     }
 }

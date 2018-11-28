@@ -39,13 +39,13 @@ public class GamePane extends Pane {
                     enemy.moveEnemies(enemy, frameDeltaTime, enemies);
                 }
                 game.setOnMouseClicked(event -> {
-                    makePlayerWeapon(gamePane);
+                    if (!pw.getCircle().isVisible()) {
+                        pw.getCircle().setVisible(true);
+                        pw.setPlayerWeapon(pw, player);
+                    }
                 });
-
-                if (pw != null) {
-                    pw.movePlayerWeapon(pw, frameDeltaTime);
-                    pw.checkPlayerCollision(pw, gamePane);
-                }
+                pw.movePlayerWeapon(pw, frameDeltaTime);
+                pw.checkPlayerWeaponCollision(pw, gamePane);
 
             }
         }.start();
@@ -58,26 +58,23 @@ public class GamePane extends Pane {
         stage.setScene(game);
         player(gamePane, game);
         createEnemies(gamePane, game);
+        makePlayerWeapon(gamePane);
     }
 
     public void player(GamePane gamePane, Scene game) {
-
         player.makePlayer(gamePane, player);
         game.setOnMouseMoved(event -> {
             player.movePlayer(event, player);
         });
-
     }
 
     public void createEnemies(GamePane gamePane, Scene game) {
-
         for (int i = 0; i < 4; i++) {
             for (int j = 1; j <= 8; j++) {
                 Vector2D enemyPosition = new Vector2D(320 + (j * 70), 40 + (i * 70));
                 Vector2D enemyVelocity = new Vector2D(100.0f, 1.0f);
                 Vector2D enemyAcceleration = new Vector2D(0, 0);
                 enemies.add(new Enemy(enemyPosition, enemyVelocity, enemyAcceleration, 25));
-
             }
         }
         for (Enemy enemy : enemies) {
@@ -88,18 +85,20 @@ public class GamePane extends Pane {
 
     public void makePlayerWeapon(GamePane gamePane) {
         Vector2D pwPosition = new Vector2D(player.getCenterX(), player.getCenterY() - player.getRadius());
-        Vector2D pwVelocity = new Vector2D(0.0f, -300.0f);
+        Vector2D pwVelocity = new Vector2D(0.0f, -450.0f);
         Vector2D pwAcceleration = new Vector2D(0, 0);
-        if (pw == null) {
-            pw = new Weapon(pwPosition, pwVelocity, pwAcceleration, 7);
-            pw.getCircle().setFill(Color.GREEN);
-            gamePane.getChildren().add(pw.getCircle());
-        }
-
+        pw = new Weapon(pwPosition, pwVelocity, pwAcceleration, 7);
+        pw.getCircle().setFill(Color.GREEN);
+        pw.getCircle().setVisible(false);
+        gamePane.getChildren().add(pw.getCircle());
     }
 
     public void makeEnemyWeapon(GamePane gamePane) {
 
+    }
+    
+    public void playerWeaponToEnemy(){
+        
     }
 
 }
