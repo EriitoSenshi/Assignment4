@@ -41,9 +41,14 @@ public class GamePane extends Pane {
                     enemy.moveEnemies(enemy, frameDeltaTime, enemies);
                 }
                 game.setOnMouseClicked(event -> {
-                    playerWeapon++;
                     makePlayerWeapon(gamePane, frameDeltaTime);
                 });
+
+                for (Weapon pw : playerWeapons) {
+                    if (pw != null) {
+                        pw.movePlayerWeapon(pw, frameDeltaTime);
+                    }
+                }
             }
         }.start();
     }
@@ -85,12 +90,11 @@ public class GamePane extends Pane {
 
     public void makePlayerWeapon(GamePane gamePane, double time) {
         Vector2D pwPosition = new Vector2D(player.getCenterX(), player.getCenterY() - player.getRadius());
-        Vector2D pwVelocity = new Vector2D(0.0f, -100.0f);
+        Vector2D pwVelocity = new Vector2D(0.0f, -300.0f);
         Vector2D pwAcceleration = new Vector2D(0, 0);
-        if (pw == null) {
-            pw = new Weapon(pwPosition, pwVelocity, pwAcceleration, 5);
+        playerWeapons.add(new Weapon(pwPosition, pwVelocity, pwAcceleration, 7));
+        for (Weapon pw : playerWeapons) {
             gamePane.getChildren().add(pw.getCircle());
-            pw.update(time);
         }
 
     }
