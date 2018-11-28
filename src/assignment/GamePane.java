@@ -6,6 +6,7 @@
 package assignment;
 
 import java.util.ArrayList;
+import javafx.animation.AnimationTimer;
 import javafx.scene.Scene;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
@@ -17,6 +18,22 @@ import javafx.stage.Stage;
  */
 public class GamePane extends Pane {
 
+    ArrayList<Enemy> enemies = new ArrayList<>();
+    double lastFrameTime = 0.0;
+
+    public void gameLoop() {
+        lastFrameTime = 0.0f;
+        long initialTime = System.nanoTime();
+        new AnimationTimer() {
+            @Override
+            public void handle(long now) {
+                double currentTime = (now - initialTime) / 1000000000.0;
+                double frameDeltaTime = currentTime - lastFrameTime;
+                lastFrameTime = currentTime;
+            }
+        }.start();
+    }
+
     public void makeGamePane(Stage stage, GamePane gamePane) {
         AssetManager.preloadAllAssets();
         gamePane.setMinWidth(1280);
@@ -25,20 +42,20 @@ public class GamePane extends Pane {
         Scene game = new Scene(gamePane);
         stage.setScene(game);
         player(gamePane, game);
-        enemy(gamePane, game);
+        createEnemies(gamePane, game);
     }
-    
-    public void player(GamePane gamePane, Scene game){
+
+    public void player(GamePane gamePane, Scene game) {
         Player player = new Player();
         player.makePlayer(gamePane, player);
         game.setOnMouseMoved(event -> {
             player.movePlayer(event, player);
         });
-        
+
     }
-    
-    public void enemy(GamePane gamePane, Scene game){
-        ArrayList<Enemy> enemies = new ArrayList<>();
+
+    public void createEnemies(GamePane gamePane, Scene game) {
+
         for (int i = 0; i < 4; i++) {
             for (int j = 1; j <= 8; j++) {
                 Vector2D enemyPosition = new Vector2D(320 + (j * 70), 40 + (i * 70));
@@ -48,19 +65,17 @@ public class GamePane extends Pane {
 
             }
         }
-        enemies.stream().map((enemy) -> {
+        for (Enemy enemy : enemies) {
             enemy.getCircle().setFill(Color.YELLOW);
-            return enemy;
-        }).forEachOrdered((enemy) -> {
             gamePane.getChildren().add(enemy.getCircle());
-        });
+        }
     }
-    
-    public void playerWeapon(){
-        
+
+    public void playerWeapon() {
+
     }
-    
-    public void enemyWeapon(){
-        
+
+    public void enemyWeapon() {
+
     }
 }

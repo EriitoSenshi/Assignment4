@@ -1,7 +1,6 @@
 package assignment;
 
 import java.util.ArrayList;
-import javafx.animation.AnimationTimer;
 import javafx.application.Application;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
@@ -23,39 +22,13 @@ public class AssignmentMain extends Application {
 
     @Override
     public void start(Stage primaryStage) {
-        lastFrameTime = 0.0f;
-        long initialTime = System.nanoTime();
+        
 
         //Creating start menu
         MenuPane menuPane = new MenuPane();
         menuPane.makeMenuPane(primaryStage);
 
-        //Initialize
-        new AnimationTimer() {
-            @Override
-            public void handle(long now) {
-                double currentTime = (now - initialTime) / 1000000000.0;
-                double frameDeltaTime = currentTime - lastFrameTime;
-                lastFrameTime = currentTime;
 
-                //Moving enemies
-                for (GameObject enemy : enemies) {
-                    enemy.update(frameDeltaTime);
-
-                    if (enemy.getCircle().getCenterX() - enemy.getCircle().getRadius() < 0) {
-                        enemies.forEach((e) -> {
-                            e.getVelocity().setX(Math.abs(e.getVelocity().getX()));
-                        });
-                    }
-                    if (enemy.getCircle().getCenterX() + enemy.getCircle().getRadius() > 1280) {
-                        enemies.forEach((e) -> {
-                            e.getVelocity().setX(-Math.abs(e.getVelocity().getX()));
-                        });
-                    }
-                }
-
-            }
-        }.start();
 
         //Start
         primaryStage.setTitle("Space invaders!");

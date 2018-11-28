@@ -14,9 +14,18 @@ public class Enemy extends GameObject {
     public Enemy(Vector2D position, Vector2D velocity, Vector2D acceleration, double radius) {
         super(position, velocity, acceleration, radius);
     }
+
+    public void checkEdgeCollision(Enemy enemy) {
+        if (enemy.getCircle().getCenterX() - enemy.getCircle().getRadius() < 0) {
+                enemy.getVelocity().setX(Math.abs(enemy.getVelocity().getX()));
+        }
+        if (enemy.getCircle().getCenterX() - enemy.getCircle().getRadius() < 0) {
+                enemy.getVelocity().setX(-Math.abs(enemy.getVelocity().getX()));
+        }
+    }
     
-    public void enemyCollision(){
-        
+    public void moveEnemies(Enemy enemy, double time){
+        enemy.update(time);
     }
 
 }
