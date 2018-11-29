@@ -20,12 +20,18 @@ public class Enemy extends GameObject {
     public void checkEdgeCollision(Enemy enemy, ArrayList<Enemy> enemies) {
         if (enemy.getCircle().getCenterX() - enemy.getCircle().getRadius() < 0) {
             enemies.forEach((e) -> {
-                e.getVelocity().setX(Math.abs(e.getVelocity().getX()));
+                if (enemy.getCircle().getCenterX() - enemy.getCircle().getRadius() <= 1
+                        || enemy.getCircle().getCenterX() + enemy.getCircle().getRadius() >= 1279) {
+                    e.getVelocity().setX(Math.abs(e.getVelocity().getX()));
+                }
             });
         }
         if (enemy.getCircle().getCenterX() + enemy.getCircle().getRadius() > 1280) {
             enemies.forEach((e) -> {
-                e.getVelocity().setX(-Math.abs(e.getVelocity().getX()));
+                if (enemy.getCircle().getCenterX() - enemy.getCircle().getRadius() <= 1
+                        || enemy.getCircle().getCenterX() + enemy.getCircle().getRadius() >= 1279) {
+                    e.getVelocity().setX(-Math.abs(e.getVelocity().getX()));
+                }
             });
         }
     }

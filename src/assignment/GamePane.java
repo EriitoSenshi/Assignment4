@@ -46,6 +46,11 @@ public class GamePane extends Pane {
                 });
                 pw.movePlayerWeapon(pw, frameDeltaTime);
                 pw.checkPlayerWeaponCollision(pw, gamePane);
+                for (Enemy enemy: enemies){
+                    if (!pw.getCircle().isVisible()) {
+                        playerWeaponToEnemy(pw, enemy);
+                    }
+                }
 
             }
         }.start();
@@ -96,9 +101,14 @@ public class GamePane extends Pane {
     public void makeEnemyWeapon(GamePane gamePane) {
 
     }
-    
-    public void playerWeaponToEnemy(){
-        
+
+    public void playerWeaponToEnemy(Weapon pw, Enemy enemy) {
+        double changingDistance = Math.sqrt(Math.pow((pw.getCircle().getCenterX() - enemy.getCircle().getCenterX()), 2) + Math.pow((pw.getCircle().getCenterY() - enemy.getCircle().getCenterY()), 2));
+        double fixedDistance = pw.getCircle().getRadius() + enemy.getCircle().getRadius();
+        if (changingDistance <= fixedDistance) {
+            pw.getCircle().setVisible(false);
+            enemies.remove(enemy);
+        }
     }
 
 }
