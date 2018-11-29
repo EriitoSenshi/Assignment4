@@ -11,6 +11,7 @@ import javafx.scene.Scene;
 import javafx.scene.layout.Pane;
 import javafx.scene.media.MediaPlayer;
 import javafx.scene.paint.Color;
+import javafx.scene.shape.Circle;
 import javafx.stage.Stage;
 
 /**
@@ -21,6 +22,7 @@ public class GamePane extends Pane {
 
     ArrayList<Enemy> enemies = new ArrayList<>();
     ArrayList<Enemy> removeEnemies = new ArrayList<>();
+    ArrayList<Circle> lives = new ArrayList<>();
     Player player = new Player();
     Weapon pw;
     double lastFrameTime = 0.0;
@@ -28,7 +30,6 @@ public class GamePane extends Pane {
     boolean win = false;
 
     public void gameLoop(GamePane gamePane, Stage stage, MenuPane menuPane, Scene menu, MediaPlayer gameMusic, MediaPlayer startMusic) {
-        AssetManager.preloadAllAssets();
         Scene game = new Scene(gamePane);
         makeGamePane(game, stage, gamePane);
         lastFrameTime = 0.0f;
@@ -39,6 +40,9 @@ public class GamePane extends Pane {
                 double currentTime = (now - initialTime) / 1000000000.0;
                 double frameDeltaTime = currentTime - lastFrameTime;
                 lastFrameTime = currentTime;
+                if (gameMusic == null) {
+                    gameMusic.play();
+                }
                 for (Enemy enemy : enemies) {
                     enemy.moveEnemies(enemy, frameDeltaTime, enemies);
                 }
@@ -54,7 +58,7 @@ public class GamePane extends Pane {
                     playerWeaponToEnemy(pw, enemy, gamePane);
                 }
                 enemies.removeAll(removeEnemies);
-                
+
                 if (enemies.isEmpty() && isGamePlaying) {
                     win = true;
                     stopGame(gamePane, menu, stage, gameMusic, startMusic);
@@ -72,6 +76,7 @@ public class GamePane extends Pane {
         player(gamePane, game);
         createEnemies(gamePane, game);
         makePlayerWeapon(gamePane);
+        makeLives(gamePane);
         isGamePlaying = true;
     }
 
@@ -103,7 +108,7 @@ public class GamePane extends Pane {
         Vector2D pwPosition = new Vector2D(player.getCenterX(), player.getCenterY() - player.getRadius());
         Vector2D pwVelocity = new Vector2D(0.0f, -450.0f);
         Vector2D pwAcceleration = new Vector2D(0, 0);
-        if (pw == null){
+        if (pw == null) {
             pw = new Weapon(pwPosition, pwVelocity, pwAcceleration, 7);
         }
         pw.getCircle().setFill(Color.GREEN);
@@ -124,6 +129,13 @@ public class GamePane extends Pane {
                 removeEnemies.add(enemy);
                 gamePane.getChildren().remove(enemy.getCircle());
             }
+        }
+    }
+
+    public void makeLives(GamePane gamePane) {
+        for (int i = 0; i < 3; i++) {
+            lives.add(new Circle(1100 + i * 60, 675, 25, Color.RED));
+            gamePane.getChildren().add(lives.get(i));
         }
     }
 
