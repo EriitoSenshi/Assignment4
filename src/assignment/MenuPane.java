@@ -31,10 +31,10 @@ public class MenuPane extends Pane {
         startMusic.play();
         Scene menu = new Scene(menuPane);
         stage.setScene(menu);
-        startButton(menuPane, stage);
+        startButton(menuPane, stage, menu);
     }
 
-    public void startButton(MenuPane menuPane, Stage stage) {
+    public void startButton(MenuPane menuPane, Stage stage, Scene menu) {
         Button startButton = new Button();
         startButton.setLayoutX(565);
         startButton.setMinHeight(200);
@@ -42,15 +42,15 @@ public class MenuPane extends Pane {
         startButton.setOpacity(0);
         menuPane.getChildren().add(startButton);
         startButton.setOnAction(event ->{
-            switchToGamePane(stage);
+            startGame(stage, menuPane, menu);
         });
     }
 
-    public void switchToGamePane(Stage stage) {
+    public void startGame(Stage stage, MenuPane menuPane, Scene menu) {
         startMusic.stop();
         gameMusic.play();
         GamePane gamePane = new GamePane();
-        gamePane.gameLoop(gamePane, stage);
+        gamePane.gameLoop(gamePane, stage, menuPane, menu, gameMusic, startMusic);
     }
 
 }

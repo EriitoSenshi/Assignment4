@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import javafx.animation.AnimationTimer;
 import javafx.scene.Scene;
 import javafx.scene.layout.Pane;
+import javafx.scene.media.MediaPlayer;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 
@@ -19,11 +20,14 @@ import javafx.stage.Stage;
 public class GamePane extends Pane {
 
     ArrayList<Enemy> enemies = new ArrayList<>();
+    ArrayList<Enemy> removeEnemies = new ArrayList<>();
     Player player = new Player();
     Weapon pw;
     double lastFrameTime = 0.0;
+    boolean isGamePlaying = true;
+    boolean win = false;
 
-    public void gameLoop(GamePane gamePane, Stage stage) {
+    public void gameLoop(GamePane gamePane, Stage stage, MenuPane menuPane, Scene menu, MediaPlayer gameMusic, MediaPlayer startMusic) {
         AssetManager.preloadAllAssets();
         Scene game = new Scene(gamePane);
         makeGamePane(game, stage, gamePane);
@@ -46,10 +50,14 @@ public class GamePane extends Pane {
                 });
                 pw.movePlayerWeapon(pw, frameDeltaTime);
                 pw.checkPlayerWeaponCollision(pw, gamePane);
-                for (Enemy enemy: enemies){
-                    if (!pw.getCircle().isVisible()) {
-                        playerWeaponToEnemy(pw, enemy);
-                    }
+                for (Enemy enemy : enemies) {
+                    playerWeaponToEnemy(pw, enemy, gamePane);
+                }
+                enemies.removeAll(removeEnemies);
+                
+                if (enemies.isEmpty() && isGamePlaying) {
+                    win = true;
+                    stopGame(gamePane, menu, stage, gameMusic, startMusic);
                 }
 
             }
@@ -64,10 +72,13 @@ public class GamePane extends Pane {
         player(gamePane, game);
         createEnemies(gamePane, game);
         makePlayerWeapon(gamePane);
+        isGamePlaying = true;
     }
 
     public void player(GamePane gamePane, Scene game) {
-        player.makePlayer(gamePane, player);
+        if (!gamePane.getChildren().contains(player)) {
+            player.makePlayer(gamePane, player);
+        }
         game.setOnMouseMoved(event -> {
             player.movePlayer(event, player);
         });
@@ -92,7 +103,9 @@ public class GamePane extends Pane {
         Vector2D pwPosition = new Vector2D(player.getCenterX(), player.getCenterY() - player.getRadius());
         Vector2D pwVelocity = new Vector2D(0.0f, -450.0f);
         Vector2D pwAcceleration = new Vector2D(0, 0);
-        pw = new Weapon(pwPosition, pwVelocity, pwAcceleration, 7);
+        if (pw == null){
+            pw = new Weapon(pwPosition, pwVelocity, pwAcceleration, 7);
+        }
         pw.getCircle().setFill(Color.GREEN);
         pw.getCircle().setVisible(false);
         gamePane.getChildren().add(pw.getCircle());
@@ -102,12 +115,30 @@ public class GamePane extends Pane {
 
     }
 
-    public void playerWeaponToEnemy(Weapon pw, Enemy enemy) {
+    public void playerWeaponToEnemy(Weapon pw, Enemy enemy, GamePane gamePane) {
         double changingDistance = Math.sqrt(Math.pow((pw.getCircle().getCenterX() - enemy.getCircle().getCenterX()), 2) + Math.pow((pw.getCircle().getCenterY() - enemy.getCircle().getCenterY()), 2));
         double fixedDistance = pw.getCircle().getRadius() + enemy.getCircle().getRadius();
-        if (changingDistance <= fixedDistance) {
-            pw.getCircle().setVisible(false);
-            enemies.remove(enemy);
+        if (pw.getCircle().isVisible()) {
+            if (changingDistance <= fixedDistance) {
+                pw.getCircle().setVisible(false);
+                removeEnemies.add(enemy);
+                gamePane.getChildren().remove(enemy.getCircle());
+            }
+        }
+    }
+
+    public void stopGame(GamePane gamePane, Scene menu, Stage stage, MediaPlayer gameMusic, MediaPlayer startMusic) {
+        cleanup(gamePane);
+        stage.setScene(menu);
+        gameMusic.stop();
+        startMusic.play();
+        isGamePlaying = false;
+    }
+
+    public void cleanup(GamePane gamePane) {
+        if (enemies != null) {
+            enemies.removeAll(enemies);
+            gamePane.getChildren().removeAll(enemies);
         }
     }
 
