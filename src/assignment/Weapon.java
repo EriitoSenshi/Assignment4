@@ -23,9 +23,24 @@ public class Weapon extends GameObject {
         playerWeapon.setPosition(new Vector2D(player.getCenterX(), player.getCenterY() - player.getRadius()));
     }
 
+    public void moveEnemyWeapon(Weapon enemyWeapon, double time) {
+        enemyWeapon.update(time);
+    }
+
+    public void setEnemyWeapon(Weapon enemyWeapon, Enemy enemy) {
+        enemyWeapon.setPosition(new Vector2D(enemy.getCircle().getCenterX(),
+                enemy.getCircle().getCenterY() + enemy.getCircle().getRadius()));
+    }
+
     public void checkPlayerWeaponCollision(Weapon pw, GamePane gamePane) {
         if (pw.getCircle().getCenterY() - pw.getCircle().getRadius() < 0) {
             pw.getCircle().setVisible(false);
+        }
+    }
+
+    public void checkEnemyWeaponCollision(Weapon ew, GamePane gamePane) {
+        if (ew.getCircle().getCenterY() + ew.getCircle().getRadius() > 625){
+            ew.getCircle().setVisible(false);
         }
     }
 }
