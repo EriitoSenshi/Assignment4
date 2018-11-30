@@ -120,7 +120,7 @@ public class GamePane extends Pane {
         for (int i = 0; i < 4; i++) {
             for (int j = 1; j <= 8; j++) {
                 Vector2D enemyPosition = new Vector2D(320 + (j * 70), 40 + (i * 70));
-                Vector2D enemyVelocity = new Vector2D(100.0f, 40.0f);
+                Vector2D enemyVelocity = new Vector2D(100.0f, 2.0f);
                 Vector2D enemyAcceleration = new Vector2D(0, 0);
                 enemies.add(new Enemy(enemyPosition, enemyVelocity, enemyAcceleration, 25));
             }
