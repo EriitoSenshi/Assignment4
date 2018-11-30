@@ -39,7 +39,7 @@ public class Weapon extends GameObject {
     }
 
     public void checkEnemyWeaponCollision(Weapon ew, GamePane gamePane) {
-        if (ew.getCircle().getCenterY() + ew.getCircle().getRadius() > 625){
+        if (ew.getCircle().getCenterY() + ew.getCircle().getRadius() > 635){
             ew.getCircle().setVisible(false);
         }
     }

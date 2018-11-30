@@ -15,7 +15,7 @@ import javafx.scene.shape.Circle;
 public class Player extends Circle {
 
     public void makePlayer(GamePane gamePane, Player player) {
-        player.setRadius(25);
+        player.setRadius(35);
         player.setCenterX(40);
         player.setCenterY(600);
         player.setFill(AssetManager.getPlayerSprite());
