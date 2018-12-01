@@ -43,9 +43,9 @@ public class GamePane extends Pane {
                 double frameDeltaTime = currentTime - lastFrameTime;
                 lastFrameTime = currentTime;
 
-                if (gameMusic == null) {
+                gameMusic.setOnEndOfMedia(() -> {
                     gameMusic.play();
-                }
+                });
 
                 enemies.forEach((enemy) -> {
                     enemy.moveEnemies(enemy, frameDeltaTime, enemies);
@@ -125,10 +125,12 @@ public class GamePane extends Pane {
                 enemies.add(new Enemy(enemyPosition, enemyVelocity, enemyAcceleration, 25));
             }
         }
-        for (Enemy enemy : enemies) {
+        enemies.stream().map((enemy) -> {
             enemy.getCircle().setFill(Color.YELLOW);
+            return enemy;
+        }).forEachOrdered((enemy) -> {
             gamePane.getChildren().add(enemy.getCircle());
-        }
+        });
     }
 
     public void makePlayerWeapon(GamePane gamePane) {

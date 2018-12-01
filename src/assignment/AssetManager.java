@@ -1,6 +1,7 @@
 package assignment;
 
 import java.io.File;
+import java.util.ArrayList;
 import javafx.scene.image.Image;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundImage;
@@ -16,13 +17,16 @@ public class AssetManager {
     static private Background startBackgroundImage = null;
     static private Background backgroundImage = null;
     static private ImagePattern playerSprite = null;
+    static private ArrayList<ImagePattern> enemySprites = null;
 
     static private Media startBackgroundMusic = null;
     static private Media backgroundMusic = null;
     static private AudioClip hitEnemySound = null;
     static private AudioClip hitPlayerSound = null;
-    static private AudioClip playerShootingSound = null;
+    static private ArrayList<AudioClip> playerShootingSounds = null;
     static private AudioClip enemyShootingSound = null;
+    static private AudioClip victorySound = null;
+    static private AudioClip defeatSound = null;
 
     static private String fileURL(String relativePath) {
         return new File(relativePath).toURI().toString();
@@ -58,6 +62,10 @@ public class AssetManager {
         enemyShootingSound = new AudioClip(fileURL("./assets/soundfx/...wav"));*/
     }
 
+    public static AudioClip getPlayerShootingSounds(int i) {
+        return playerShootingSounds.get(i);
+    }
+
     static public Background getBackgroundImage() {
         return backgroundImage;
     }
@@ -76,5 +84,29 @@ public class AssetManager {
     
     static public ImagePattern getPlayerSprite(){
         return playerSprite;
+    }
+    
+    static public ImagePattern getEnemySprites(int i){
+        return enemySprites.get(i);
+    }
+
+    public static AudioClip getHitEnemySound() {
+        return hitEnemySound;
+    }
+
+    public static AudioClip getHitPlayerSound() {
+        return hitPlayerSound;
+    }
+
+    public static AudioClip getEnemyShootingSound() {
+        return enemyShootingSound;
+    }
+
+    public static AudioClip getVictorySound() {
+        return victorySound;
+    }
+
+    public static AudioClip getDefeatSound() {
+        return defeatSound;
     }
 }
