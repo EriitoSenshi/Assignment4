@@ -36,8 +36,8 @@ public class GamePane extends Pane {
     boolean isGamePlaying = true;
     boolean win = false;
 
-    public void gameLoop(GamePane gamePane, Stage stage, MenuPane menuPane, Scene menu, 
-            MediaPlayer gameMusic, MediaPlayer startMusic, 
+    public void gameLoop(GamePane gamePane, Stage stage, MenuPane menuPane, Scene menu,
+            MediaPlayer gameMusic, MediaPlayer startMusic,
             Label wins, Label losses) {
         Scene game = new Scene(gamePane);
         makeGamePane(game, stage, gamePane);
@@ -68,14 +68,14 @@ public class GamePane extends Pane {
                 pw.checkPlayerWeaponCollision(pw, gamePane);
                 enemies.forEach((enemy) -> {
                     playerWeaponToEnemy(pw, enemy, gamePane);
-                    enemyBottom(enemy, gamePane, menu, stage, gameMusic, startMusic, 
+                    enemyBottom(enemy, gamePane, menu, stage, gameMusic, startMusic,
                             wins, losses);
                 });
                 enemies.removeAll(removeEnemies);
 
                 if (enemies.isEmpty() && isGamePlaying) {
                     win = true;
-                    stopGame(gamePane, menu, stage, gameMusic, startMusic, 
+                    stopGame(gamePane, menu, stage, gameMusic, startMusic,
                             wins, losses);
                 }
 
@@ -96,7 +96,7 @@ public class GamePane extends Pane {
                     });
                 });
                 shields.removeAll(removeShields);
-                enemyWeaponToPlayer(ew, player, gamePane, menu, stage, gameMusic, startMusic, 
+                enemyWeaponToPlayer(ew, player, gamePane, menu, stage, gameMusic, startMusic,
                         wins, losses);
 
             }
@@ -130,18 +130,27 @@ public class GamePane extends Pane {
     public void createEnemies(GamePane gamePane, Scene game) {
         for (int i = 0; i < 4; i++) {
             for (int j = 1; j <= 8; j++) {
-                Vector2D enemyPosition = new Vector2D(320 + (j * 70), 40 + (i * 70));
+                Vector2D enemyPosition = new Vector2D(305 + (j * 70), 40 + (i * 70));
                 Vector2D enemyVelocity = new Vector2D(100.0f, 2.0f);
                 Vector2D enemyAcceleration = new Vector2D(0, 0);
-                enemies.add(new Enemy(enemyPosition, enemyVelocity, enemyAcceleration, 25));
+                enemies.add(new Enemy(enemyPosition, enemyVelocity, enemyAcceleration, 30));
             }
         }
-        enemies.stream().map((enemy) -> {
-            enemy.getCircle().setFill(Color.YELLOW);
-            return enemy;
-        }).forEachOrdered((enemy) -> {
-            gamePane.getChildren().add(enemy.getCircle());
-        });
+        for (int i = 0; i <= 31; i++) {
+            if (i <= 7) {
+                enemies.get(i).getCircle().setFill(AssetManager.getJackFrost());
+            }
+            if (i > 7 && i <= 15) {
+                enemies.get(i).getCircle().setFill(AssetManager.getBlackFrost());
+            }
+            if (i > 15 && i <= 23) {
+                enemies.get(i).getCircle().setFill(AssetManager.getJackFrost());
+            }
+            if (i > 23 && i <= 31) {
+                enemies.get(i).getCircle().setFill(AssetManager.getBlackFrost());
+            }
+            gamePane.getChildren().add(enemies.get(i).getCircle());
+        }
     }
 
     public void makeLabels(GamePane gamePane) {
@@ -188,7 +197,7 @@ public class GamePane extends Pane {
     }
 
     public void playerWeaponToEnemy(Weapon pw, Enemy enemy, GamePane gamePane) {
-        double changingDistance = Math.sqrt(Math.pow((pw.getCircle().getCenterX() - enemy.getCircle().getCenterX()), 2) 
+        double changingDistance = Math.sqrt(Math.pow((pw.getCircle().getCenterX() - enemy.getCircle().getCenterX()), 2)
                 + Math.pow((pw.getCircle().getCenterY() - enemy.getCircle().getCenterY()), 2));
         double fixedDistance = pw.getCircle().getRadius() + enemy.getCircle().getRadius();
         if (pw.getCircle().isVisible()) {
@@ -202,15 +211,15 @@ public class GamePane extends Pane {
         }
     }
 
-    public void enemyWeaponToPlayer(Weapon ew, Player player, GamePane gamePane, Scene menu, Stage stage, 
-            MediaPlayer gameMusic, MediaPlayer startMusic, 
+    public void enemyWeaponToPlayer(Weapon ew, Player player, GamePane gamePane, Scene menu, Stage stage,
+            MediaPlayer gameMusic, MediaPlayer startMusic,
             Label wins, Label losses) {
-        double changingDistance = Math.sqrt(Math.pow((ew.getCircle().getCenterX() - player.getCenterX()), 2) 
+        double changingDistance = Math.sqrt(Math.pow((ew.getCircle().getCenterX() - player.getCenterX()), 2)
                 + Math.pow((ew.getCircle().getCenterY() - player.getCenterY()), 2));
         double fixedDistance = ew.getCircle().getRadius() + player.getRadius();
         if (ew.getCircle().isVisible()) {
             if (changingDistance <= fixedDistance) {
-                removeLives(gamePane, menu, stage, gameMusic, startMusic, 
+                removeLives(gamePane, menu, stage, gameMusic, startMusic,
                         wins, losses);
                 ew.getCircle().setVisible(false);
             }
@@ -218,7 +227,7 @@ public class GamePane extends Pane {
     }
 
     public void enemyWeaponToShields(Weapon ew, Shield shield, GamePane gamePane) {
-        double changingDistance = Math.sqrt(Math.pow((ew.getCircle().getCenterX() - shield.getCenterX()), 2) 
+        double changingDistance = Math.sqrt(Math.pow((ew.getCircle().getCenterX() - shield.getCenterX()), 2)
                 + Math.pow((ew.getCircle().getCenterY() - shield.getCenterY()), 2));
         double fixedDistance = ew.getCircle().getRadius() + shield.getRadius();
         if (ew.getCircle().isVisible()) {
@@ -230,24 +239,24 @@ public class GamePane extends Pane {
         }
     }
 
-    public void enemyBottom(Enemy enemy, GamePane gamePane, Scene menu, Stage stage, 
-            MediaPlayer gameMusic, MediaPlayer startMusic, 
+    public void enemyBottom(Enemy enemy, GamePane gamePane, Scene menu, Stage stage,
+            MediaPlayer gameMusic, MediaPlayer startMusic,
             Label wins, Label losses) {
-        double changingDistance = Math.sqrt(Math.pow((enemy.getCircle().getCenterX() - player.getCenterX()), 2) 
+        double changingDistance = Math.sqrt(Math.pow((enemy.getCircle().getCenterX() - player.getCenterX()), 2)
                 + Math.pow((enemy.getCircle().getCenterY() - player.getCenterY()), 2));
         double fixedDistance = enemy.getCircle().getRadius() + player.getRadius();
         if (changingDistance <= fixedDistance) {
-            stopGame(gamePane, menu, stage, gameMusic, startMusic, 
+            stopGame(gamePane, menu, stage, gameMusic, startMusic,
                     wins, losses);
         }
         if (enemy.getCircle().getCenterY() >= 600) {
-            stopGame(gamePane, menu, stage, gameMusic, startMusic, 
+            stopGame(gamePane, menu, stage, gameMusic, startMusic,
                     wins, losses);
         }
     }
 
     public void enemiesToShields(Enemy enemy, Shield shield, GamePane gamePane) {
-        double changingDistance = Math.sqrt(Math.pow((enemy.getCircle().getCenterX() - shield.getCenterX()), 2) 
+        double changingDistance = Math.sqrt(Math.pow((enemy.getCircle().getCenterX() - shield.getCenterX()), 2)
                 + Math.pow((enemy.getCircle().getCenterY() - shield.getCenterY()), 2));
         double fixedDistance = enemy.getCircle().getRadius() + shield.getRadius();
         if (changingDistance <= fixedDistance) {
@@ -272,8 +281,8 @@ public class GamePane extends Pane {
         }
     }
 
-    public void removeLives(GamePane gamePane, Scene menu, Stage stage, 
-            MediaPlayer gameMusic, MediaPlayer startMusic, 
+    public void removeLives(GamePane gamePane, Scene menu, Stage stage,
+            MediaPlayer gameMusic, MediaPlayer startMusic,
             Label wins, Label losses) {
         if (lives.size() == 3) {
             gamePane.getChildren().remove(lives.get(2));
@@ -284,13 +293,13 @@ public class GamePane extends Pane {
         } else if (lives.size() == 1) {
             gamePane.getChildren().remove(lives.get(0));
             lives.remove(lives.get(0));
-            stopGame(gamePane, menu, stage, gameMusic, startMusic, 
+            stopGame(gamePane, menu, stage, gameMusic, startMusic,
                     wins, losses);
         }
     }
 
-    public void stopGame(GamePane gamePane, Scene menu, Stage stage, 
-            MediaPlayer gameMusic, MediaPlayer startMusic, 
+    public void stopGame(GamePane gamePane, Scene menu, Stage stage,
+            MediaPlayer gameMusic, MediaPlayer startMusic,
             Label wins, Label losses) {
         cleanup(gamePane);
         if (win) {
@@ -303,7 +312,7 @@ public class GamePane extends Pane {
         stage.setScene(menu);
         gameMusic.stop();
         startMusic.play();
-        
+
         isGamePlaying = false;
     }
 

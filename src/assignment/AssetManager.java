@@ -17,7 +17,7 @@ public class AssetManager {
     static private Background startBackgroundImage = null;
     static private Background backgroundImage = null;
     static private ImagePattern playerSprite = null;
-    static private ArrayList<ImagePattern> enemySprites = null;
+    static private ArrayList<ImagePattern> enemySprites = new ArrayList<>();
 
     static private Media startBackgroundMusic = null;
     static private Media backgroundMusic = null;
@@ -51,6 +51,8 @@ public class AssetManager {
                         BackgroundSize.DEFAULT));
 
         playerSprite = (new ImagePattern(new Image(fileURL("./assets/images/playerSprite.png"))));
+        enemySprites.add(new ImagePattern(new Image(fileURL("./assets/images/jackFrost.png"))));
+        enemySprites.add(new ImagePattern(new Image(fileURL("./assets/images/blackFrost.png"))));
 
         // Preload all music tracks
         backgroundMusic = new Media(fileURL("./assets/music/backgroundMusic.mp3"));
@@ -81,13 +83,17 @@ public class AssetManager {
     static public Media getStartBackgroundMusic() {
         return startBackgroundMusic;
     }
-    
-    static public ImagePattern getPlayerSprite(){
+
+    static public ImagePattern getPlayerSprite() {
         return playerSprite;
     }
+
+    static public ImagePattern getJackFrost() {
+        return enemySprites.get(0);
+    }
     
-    static public ImagePattern getEnemySprites(int i){
-        return enemySprites.get(i);
+    static public ImagePattern getBlackFrost() {
+        return enemySprites.get(1);
     }
 
     public static AudioClip getHitEnemySound() {
