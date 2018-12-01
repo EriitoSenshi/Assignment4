@@ -8,9 +8,11 @@ package assignment;
 import java.util.ArrayList;
 import javafx.animation.AnimationTimer;
 import javafx.scene.Scene;
+import javafx.scene.control.Label;
 import javafx.scene.layout.Pane;
 import javafx.scene.media.MediaPlayer;
 import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
 import javafx.stage.Stage;
 
 /**
@@ -27,11 +29,16 @@ public class GamePane extends Pane {
     Player player = new Player();
     Weapon pw;
     Weapon ew;
+    Label lifeLabel = new Label("Lives: ");
+    Label score = new Label("Score: 0");
+    int scoreCount = 0;
     double lastFrameTime = 0.0;
     boolean isGamePlaying = true;
     boolean win = false;
 
-    public void gameLoop(GamePane gamePane, Stage stage, MenuPane menuPane, Scene menu, MediaPlayer gameMusic, MediaPlayer startMusic) {
+    public void gameLoop(GamePane gamePane, Stage stage, MenuPane menuPane, Scene menu, 
+            MediaPlayer gameMusic, MediaPlayer startMusic, 
+            Label wins, Label losses) {
         Scene game = new Scene(gamePane);
         makeGamePane(game, stage, gamePane);
         lastFrameTime = 0.0f;
@@ -61,16 +68,18 @@ public class GamePane extends Pane {
                 pw.checkPlayerWeaponCollision(pw, gamePane);
                 enemies.forEach((enemy) -> {
                     playerWeaponToEnemy(pw, enemy, gamePane);
-                    enemyBottom(enemy, gamePane, menu, stage, gameMusic, startMusic);
+                    enemyBottom(enemy, gamePane, menu, stage, gameMusic, startMusic, 
+                            wins, losses);
                 });
                 enemies.removeAll(removeEnemies);
 
                 if (enemies.isEmpty() && isGamePlaying) {
                     win = true;
-                    stopGame(gamePane, menu, stage, gameMusic, startMusic);
+                    stopGame(gamePane, menu, stage, gameMusic, startMusic, 
+                            wins, losses);
                 }
 
-                int randomNumber = (int) (Math.random() * 75);
+                int randomNumber = (int) (Math.random() * 100);
                 int random = (int) (Math.random() * (enemies.size() - 1));
                 if (randomNumber == 8) {
                     if (!ew.getCircle().isVisible() && isGamePlaying) {
@@ -87,7 +96,8 @@ public class GamePane extends Pane {
                     });
                 });
                 shields.removeAll(removeShields);
-                enemyWeaponToPlayer(ew, player, gamePane, menu, stage, gameMusic, startMusic);
+                enemyWeaponToPlayer(ew, player, gamePane, menu, stage, gameMusic, startMusic, 
+                        wins, losses);
 
             }
         }.start();
@@ -104,6 +114,7 @@ public class GamePane extends Pane {
         makeEnemyWeapon(gamePane);
         makeLives(gamePane);
         makeShields(gamePane);
+        makeLabels(gamePane);
         isGamePlaying = true;
     }
 
@@ -133,6 +144,23 @@ public class GamePane extends Pane {
         });
     }
 
+    public void makeLabels(GamePane gamePane) {
+        lifeLabel.setFont(new Font("Comic Sans MS", 28));
+        lifeLabel.setLayoutX(990);
+        lifeLabel.setLayoutY(650);
+        lifeLabel.setTextFill(Color.RED);
+        score.setFont(new Font("Comic Sans MS", 28));
+        score.setLayoutX(20);
+        score.setLayoutY(650);
+        score.setTextFill(Color.RED);
+        if (!gamePane.getChildren().contains(lifeLabel)) {
+            gamePane.getChildren().add(lifeLabel);
+        }
+        if (!gamePane.getChildren().contains(score)) {
+            gamePane.getChildren().add(score);
+        }
+    }
+
     public void makePlayerWeapon(GamePane gamePane) {
         Vector2D pwPosition = new Vector2D(player.getCenterX(), player.getCenterY() - player.getRadius());
         Vector2D pwVelocity = new Vector2D(0.0f, -450.0f);
@@ -160,10 +188,13 @@ public class GamePane extends Pane {
     }
 
     public void playerWeaponToEnemy(Weapon pw, Enemy enemy, GamePane gamePane) {
-        double changingDistance = Math.sqrt(Math.pow((pw.getCircle().getCenterX() - enemy.getCircle().getCenterX()), 2) + Math.pow((pw.getCircle().getCenterY() - enemy.getCircle().getCenterY()), 2));
+        double changingDistance = Math.sqrt(Math.pow((pw.getCircle().getCenterX() - enemy.getCircle().getCenterX()), 2) 
+                + Math.pow((pw.getCircle().getCenterY() - enemy.getCircle().getCenterY()), 2));
         double fixedDistance = pw.getCircle().getRadius() + enemy.getCircle().getRadius();
         if (pw.getCircle().isVisible()) {
             if (changingDistance <= fixedDistance) {
+                scoreCount++;
+                score.setText("Score: " + scoreCount);
                 pw.getCircle().setVisible(false);
                 removeEnemies.add(enemy);
                 gamePane.getChildren().remove(enemy.getCircle());
@@ -171,19 +202,24 @@ public class GamePane extends Pane {
         }
     }
 
-    public void enemyWeaponToPlayer(Weapon ew, Player player, GamePane gamePane, Scene menu, Stage stage, MediaPlayer gameMusic, MediaPlayer startMusic) {
-        double changingDistance = Math.sqrt(Math.pow((ew.getCircle().getCenterX() - player.getCenterX()), 2) + Math.pow((ew.getCircle().getCenterY() - player.getCenterY()), 2));
+    public void enemyWeaponToPlayer(Weapon ew, Player player, GamePane gamePane, Scene menu, Stage stage, 
+            MediaPlayer gameMusic, MediaPlayer startMusic, 
+            Label wins, Label losses) {
+        double changingDistance = Math.sqrt(Math.pow((ew.getCircle().getCenterX() - player.getCenterX()), 2) 
+                + Math.pow((ew.getCircle().getCenterY() - player.getCenterY()), 2));
         double fixedDistance = ew.getCircle().getRadius() + player.getRadius();
         if (ew.getCircle().isVisible()) {
             if (changingDistance <= fixedDistance) {
-                removeLives(gamePane, menu, stage, gameMusic, startMusic);
+                removeLives(gamePane, menu, stage, gameMusic, startMusic, 
+                        wins, losses);
                 ew.getCircle().setVisible(false);
             }
         }
     }
 
     public void enemyWeaponToShields(Weapon ew, Shield shield, GamePane gamePane) {
-        double changingDistance = Math.sqrt(Math.pow((ew.getCircle().getCenterX() - shield.getCenterX()), 2) + Math.pow((ew.getCircle().getCenterY() - shield.getCenterY()), 2));
+        double changingDistance = Math.sqrt(Math.pow((ew.getCircle().getCenterX() - shield.getCenterX()), 2) 
+                + Math.pow((ew.getCircle().getCenterY() - shield.getCenterY()), 2));
         double fixedDistance = ew.getCircle().getRadius() + shield.getRadius();
         if (ew.getCircle().isVisible()) {
             if (changingDistance <= fixedDistance) {
@@ -194,19 +230,25 @@ public class GamePane extends Pane {
         }
     }
 
-    public void enemyBottom(Enemy enemy, GamePane gamePane, Scene menu, Stage stage, MediaPlayer gameMusic, MediaPlayer startMusic) {
-        double changingDistance = Math.sqrt(Math.pow((enemy.getCircle().getCenterX() - player.getCenterX()), 2) + Math.pow((enemy.getCircle().getCenterY() - player.getCenterY()), 2));
+    public void enemyBottom(Enemy enemy, GamePane gamePane, Scene menu, Stage stage, 
+            MediaPlayer gameMusic, MediaPlayer startMusic, 
+            Label wins, Label losses) {
+        double changingDistance = Math.sqrt(Math.pow((enemy.getCircle().getCenterX() - player.getCenterX()), 2) 
+                + Math.pow((enemy.getCircle().getCenterY() - player.getCenterY()), 2));
         double fixedDistance = enemy.getCircle().getRadius() + player.getRadius();
         if (changingDistance <= fixedDistance) {
-            stopGame(gamePane, menu, stage, gameMusic, startMusic);
+            stopGame(gamePane, menu, stage, gameMusic, startMusic, 
+                    wins, losses);
         }
         if (enemy.getCircle().getCenterY() >= 600) {
-            stopGame(gamePane, menu, stage, gameMusic, startMusic);
+            stopGame(gamePane, menu, stage, gameMusic, startMusic, 
+                    wins, losses);
         }
     }
 
     public void enemiesToShields(Enemy enemy, Shield shield, GamePane gamePane) {
-        double changingDistance = Math.sqrt(Math.pow((enemy.getCircle().getCenterX() - shield.getCenterX()), 2) + Math.pow((enemy.getCircle().getCenterY() - shield.getCenterY()), 2));
+        double changingDistance = Math.sqrt(Math.pow((enemy.getCircle().getCenterX() - shield.getCenterX()), 2) 
+                + Math.pow((enemy.getCircle().getCenterY() - shield.getCenterY()), 2));
         double fixedDistance = enemy.getCircle().getRadius() + shield.getRadius();
         if (changingDistance <= fixedDistance) {
             gamePane.getChildren().remove(shield);
@@ -230,7 +272,9 @@ public class GamePane extends Pane {
         }
     }
 
-    public void removeLives(GamePane gamePane, Scene menu, Stage stage, MediaPlayer gameMusic, MediaPlayer startMusic) {
+    public void removeLives(GamePane gamePane, Scene menu, Stage stage, 
+            MediaPlayer gameMusic, MediaPlayer startMusic, 
+            Label wins, Label losses) {
         if (lives.size() == 3) {
             gamePane.getChildren().remove(lives.get(2));
             lives.remove(lives.get(2));
@@ -240,15 +284,26 @@ public class GamePane extends Pane {
         } else if (lives.size() == 1) {
             gamePane.getChildren().remove(lives.get(0));
             lives.remove(lives.get(0));
-            stopGame(gamePane, menu, stage, gameMusic, startMusic);
+            stopGame(gamePane, menu, stage, gameMusic, startMusic, 
+                    wins, losses);
         }
     }
 
-    public void stopGame(GamePane gamePane, Scene menu, Stage stage, MediaPlayer gameMusic, MediaPlayer startMusic) {
+    public void stopGame(GamePane gamePane, Scene menu, Stage stage, 
+            MediaPlayer gameMusic, MediaPlayer startMusic, 
+            Label wins, Label losses) {
         cleanup(gamePane);
+        if (win) {
+            MenuPane.wincount++;
+            wins.setText(String.valueOf(MenuPane.wincount));
+        } else {
+            MenuPane.losscount++;
+            losses.setText(String.valueOf(MenuPane.losscount));
+        }
         stage.setScene(menu);
         gameMusic.stop();
         startMusic.play();
+        
         isGamePlaying = false;
     }
 

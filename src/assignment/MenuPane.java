@@ -24,6 +24,10 @@ public class MenuPane extends Pane {
     MediaPlayer gameMusic;
     Label victories;
     Label defeats;
+    public static Label wins;
+    public static Label losses;
+    public static int losscount = 0;
+    public static int wincount = 0;
 
     public void makeMenuPane(Stage stage) {
         AssetManager.preloadAllAssets();
@@ -43,8 +47,22 @@ public class MenuPane extends Pane {
         defeats.setTextFill(Color.GRAY);
         defeats.setLayoutX(175);
         defeats.setLayoutY(210);
+        wins = new Label(String.valueOf(wincount));
+        wins.setFont(new Font("Comic Sans MS", 40));
+        wins.setMinSize(100, 20);
+        wins.setTextFill(Color.RED);
+        wins.setLayoutX(130);
+        wins.setLayoutY(35);
+        losses = new Label(String.valueOf(losscount));
+        losses.setFont(new Font("Comic Sans MS", 40));
+        losses.setMinSize(100, 20);
+        losses.setTextFill(Color.RED);
+        losses.setLayoutX(280);
+        losses.setLayoutY(190);
         menuPane.getChildren().add(defeats);
         menuPane.getChildren().add(victories);
+        menuPane.getChildren().add(wins);
+        menuPane.getChildren().add(losses);
         startMusic = new MediaPlayer(AssetManager.getStartBackgroundMusic());
         gameMusic = new MediaPlayer(AssetManager.getBackgroundMusic());
         startMusic.play();
@@ -72,7 +90,7 @@ public class MenuPane extends Pane {
         startMusic.stop();
         gameMusic.play();
         GamePane gamePane = new GamePane();
-        gamePane.gameLoop(gamePane, stage, menuPane, menu, gameMusic, startMusic);
+        gamePane.gameLoop(gamePane, stage, menuPane, menu, gameMusic, startMusic, wins, losses);
     }
 
 }
