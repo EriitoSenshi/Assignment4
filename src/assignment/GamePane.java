@@ -116,6 +116,7 @@ public class GamePane extends Pane {
                             wins, losses);
                 }
                 shields.forEach((shield) -> {
+                    playerWeaponToShields(pw, shield, gamePane);
                     for (Weapon enemyWeapon : ew) {
                         enemyWeaponToShields(enemyWeapon, shield, gamePane);
                     }
@@ -123,7 +124,6 @@ public class GamePane extends Pane {
                         enemiesToShields(enemy, shield, gamePane);
                     });
                 });
-                shields.removeAll(removeShields);
 
             }
         }.start();
@@ -261,6 +261,17 @@ public class GamePane extends Pane {
         }
     }
 
+    public void playerWeaponToShields(Weapon pw, Shield shield, GamePane gamePane) {
+        double changingDistance = Math.sqrt(Math.pow((pw.getCircle().getCenterX() - shield.getCenterX()), 2)
+                + Math.pow((pw.getCircle().getCenterY() - shield.getCenterY()), 2));
+        double fixedDistance = pw.getCircle().getRadius() + shield.getRadius();
+        if (pw.getCircle().isVisible()) {
+            if (changingDistance <= fixedDistance) {
+                pw.getCircle().setVisible(false);
+            }
+        }
+    }
+
     public void enemyWeaponToShields(Weapon ew, Shield shield, GamePane gamePane) {
         double changingDistance = Math.sqrt(Math.pow((ew.getCircle().getCenterX() - shield.getCenterX()), 2)
                 + Math.pow((ew.getCircle().getCenterY() - shield.getCenterY()), 2));
@@ -269,8 +280,6 @@ public class GamePane extends Pane {
             if (changingDistance <= fixedDistance) {
                 AssetManager.getHitShieldSound().play();
                 ew.getCircle().setVisible(false);
-                gamePane.getChildren().remove(shield);
-                removeShields.add(shield);
             }
         }
     }
@@ -349,7 +358,7 @@ public class GamePane extends Pane {
             MenuPane.wincount++;
             wins.setText(String.valueOf(MenuPane.wincount));
             game.setOnKeyPressed((KeyEvent event) -> {
-                if (event.getCode() == KeyCode.ENTER){
+                if (event.getCode() == KeyCode.ENTER) {
                     stage.setScene(menu);
                     startMusic.play();
                 }
@@ -361,7 +370,7 @@ public class GamePane extends Pane {
             MenuPane.losscount++;
             losses.setText(String.valueOf(MenuPane.losscount));
             game.setOnKeyPressed((KeyEvent event) -> {
-                if (event.getCode() == KeyCode.ENTER){
+                if (event.getCode() == KeyCode.ENTER) {
                     stage.setScene(menu);
                     startMusic.play();
                 }
@@ -390,7 +399,7 @@ public class GamePane extends Pane {
             shields.removeAll(removeShields);
 
         }
-        for (Weapon enemyWeapon: ew){
+        for (Weapon enemyWeapon : ew) {
             enemyWeapon.getCircle().setVisible(false);
         }
         player.setVisible(false);
