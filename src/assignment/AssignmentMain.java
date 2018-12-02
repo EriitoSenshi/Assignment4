@@ -13,16 +13,13 @@ public class AssignmentMain extends Application {
     public void start(Stage primaryStage) {
 
         //Creating start menu
-        
         MenuPane menuPane = new MenuPane();
         menuPane.makeMenuPane(primaryStage);
         primaryStage.sizeToScene();
         primaryStage.setResizable(false);
-        
 
         //Start
         primaryStage.setTitle("Space invaders!");
-        
         primaryStage.show();
 
     }

@@ -237,7 +237,7 @@ public class GamePane extends Pane {
                 AudioClip hitEnemy = AssetManager.getHitEnemySound();
                 hitEnemy.setVolume(1.0);
                 hitEnemy.play();
-                scoreCount++;
+                scoreCount += 10;
                 score.setText("Score: " + scoreCount);
                 pw.getCircle().setVisible(false);
                 removeEnemies.add(enemy);
