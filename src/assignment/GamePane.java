@@ -10,6 +10,7 @@ import javafx.animation.AnimationTimer;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.layout.Pane;
+import javafx.scene.media.AudioClip;
 import javafx.scene.media.MediaPlayer;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
@@ -28,7 +29,7 @@ public class GamePane extends Pane {
     ArrayList<Shield> removeShields = new ArrayList<>();
     Player player = new Player();
     Weapon pw;
-    Weapon ew;
+    ArrayList<Weapon> ew = new ArrayList<>();
     Label lifeLabel = new Label("Lives: ");
     Label score = new Label("Score: 0");
     int scoreCount = 0;
@@ -60,6 +61,7 @@ public class GamePane extends Pane {
 
                 game.setOnMouseClicked(event -> {
                     if (!pw.getCircle().isVisible()) {
+                        AssetManager.getPlayerShootingSounds((int) (Math.random() * 3)).play();
                         pw.getCircle().setVisible(true);
                         pw.setPlayerWeapon(pw, player);
                     }
@@ -79,25 +81,43 @@ public class GamePane extends Pane {
                             wins, losses);
                 }
 
-                int randomNumber = (int) (Math.random() * 100);
+                int randomNumber = (int) (Math.random() * 400);
                 int random = (int) (Math.random() * (enemies.size() - 1));
-                if (randomNumber == 8) {
-                    if (!ew.getCircle().isVisible() && isGamePlaying) {
-                        ew.getCircle().setVisible(true);
-                        ew.setEnemyWeapon(ew, enemies.get(random));
+
+                if (randomNumber == 100) {
+                    if (!ew.get(0).getCircle().isVisible() && isGamePlaying) {
+                        ew.get(0).getCircle().setVisible(true);
+                        ew.get(0).setEnemyWeapon(ew.get(0), enemies.get(random));
                     }
                 }
-                ew.moveEnemyWeapon(ew, frameDeltaTime);
-                ew.checkEnemyWeaponCollision(ew, gamePane);
+                if (randomNumber == 200) {
+                    if (!ew.get(1).getCircle().isVisible() && isGamePlaying) {
+                        ew.get(1).getCircle().setVisible(true);
+                        ew.get(1).setEnemyWeapon(ew.get(1), enemies.get(random));
+                    }
+                }
+                if (randomNumber == 300) {
+                    if (!ew.get(2).getCircle().isVisible() && isGamePlaying) {
+                        ew.get(2).getCircle().setVisible(true);
+                        ew.get(2).setEnemyWeapon(ew.get(2), enemies.get(random));
+                    }
+                }
+
+                for (Weapon enemyWeapon : ew) {
+                    enemyWeapon.moveEnemyWeapon(enemyWeapon, frameDeltaTime);
+                    enemyWeapon.checkEnemyWeaponCollision(enemyWeapon, gamePane);
+                    enemyWeaponToPlayer(enemyWeapon, player, gamePane, menu, stage, gameMusic, startMusic,
+                            wins, losses);
+                }
                 shields.forEach((shield) -> {
-                    enemyWeaponToShields(ew, shield, gamePane);
+                    for (Weapon enemyWeapon : ew) {
+                        enemyWeaponToShields(enemyWeapon, shield, gamePane);
+                    }
                     enemies.forEach(enemy -> {
                         enemiesToShields(enemy, shield, gamePane);
                     });
                 });
                 shields.removeAll(removeShields);
-                enemyWeaponToPlayer(ew, player, gamePane, menu, stage, gameMusic, startMusic,
-                        wins, losses);
 
             }
         }.start();
@@ -131,7 +151,7 @@ public class GamePane extends Pane {
         for (int i = 0; i < 4; i++) {
             for (int j = 1; j <= 8; j++) {
                 Vector2D enemyPosition = new Vector2D(305 + (j * 70), 40 + (i * 70));
-                Vector2D enemyVelocity = new Vector2D(100.0f, 2.0f);
+                Vector2D enemyVelocity = new Vector2D(100.0f, 1.5f);
                 Vector2D enemyAcceleration = new Vector2D(0, 0);
                 enemies.add(new Enemy(enemyPosition, enemyVelocity, enemyAcceleration, 30));
             }
@@ -175,9 +195,9 @@ public class GamePane extends Pane {
         Vector2D pwVelocity = new Vector2D(0.0f, -450.0f);
         Vector2D pwAcceleration = new Vector2D(0, 0);
         if (pw == null) {
-            pw = new Weapon(pwPosition, pwVelocity, pwAcceleration, 7);
+            pw = new Weapon(pwPosition, pwVelocity, pwAcceleration, 15);
         }
-        pw.getCircle().setFill(Color.GREEN);
+        pw.getCircle().setFill(AssetManager.getPlayerWeapon());
         pw.getCircle().setVisible(false);
         gamePane.getChildren().add(pw.getCircle());
     }
@@ -187,12 +207,17 @@ public class GamePane extends Pane {
         Vector2D ewPosition = new Vector2D(0, 0);
         Vector2D ewVelocity = new Vector2D(0.0f, 450.0f);
         Vector2D ewAcceleration = new Vector2D(0, 0);
-        if (ew == null) {
-            ew = new Weapon(ewPosition, ewVelocity, ewAcceleration, 7);
+
+        if (ew.isEmpty()) {
+            for (int i = 0; i < 3; i++) {
+                ew.add(new Weapon(ewPosition, ewVelocity, ewAcceleration, 10));
+            }
         }
-        ew.getCircle().setFill(Color.GREEN);
-        ew.getCircle().setVisible(false);
-        gamePane.getChildren().add(ew.getCircle());
+        for (Weapon enemyWeapon : ew) {
+            enemyWeapon.getCircle().setFill(AssetManager.getEnemyWeapon());
+            enemyWeapon.getCircle().setVisible(false);
+            gamePane.getChildren().add(enemyWeapon.getCircle());
+        }
 
     }
 
@@ -202,6 +227,9 @@ public class GamePane extends Pane {
         double fixedDistance = pw.getCircle().getRadius() + enemy.getCircle().getRadius();
         if (pw.getCircle().isVisible()) {
             if (changingDistance <= fixedDistance) {
+                AudioClip hitEnemy = AssetManager.getHitEnemySound();
+                hitEnemy.setVolume(1.0);
+                hitEnemy.play();
                 scoreCount++;
                 score.setText("Score: " + scoreCount);
                 pw.getCircle().setVisible(false);
@@ -232,6 +260,7 @@ public class GamePane extends Pane {
         double fixedDistance = ew.getCircle().getRadius() + shield.getRadius();
         if (ew.getCircle().isVisible()) {
             if (changingDistance <= fixedDistance) {
+                AssetManager.getHitShieldSound().play();
                 ew.getCircle().setVisible(false);
                 gamePane.getChildren().remove(shield);
                 removeShields.add(shield);
@@ -269,14 +298,16 @@ public class GamePane extends Pane {
 
     public void makeLives(GamePane gamePane) {
         for (int i = 0; i < 3; i++) {
-            lives.add(new Life(1100 + i * 60, 675, 25, Color.RED));
+            lives.add(new Life(1100 + i * 60, 675, 25));
+            lives.get(i).setFill(AssetManager.getLife());
             gamePane.getChildren().add(lives.get(i));
         }
     }
 
     public void makeShields(GamePane gamePane) {
-        for (int i = 0; i < 3; i++) {
-            shields.add(new Shield(320 + i * 300, 450, 40, Color.WHITE));
+        for (int i = 0; i < 4; i++) {
+            shields.add(new Shield(180 + i * 300, 450, 50));
+            shields.get(i).setFill(AssetManager.getShield());
             gamePane.getChildren().add(shields.get(i));
         }
     }
@@ -285,9 +316,11 @@ public class GamePane extends Pane {
             MediaPlayer gameMusic, MediaPlayer startMusic,
             Label wins, Label losses) {
         if (lives.size() == 3) {
+            AssetManager.getHitPlayerSound((int) (Math.random() * 3)).play();
             gamePane.getChildren().remove(lives.get(2));
             lives.remove(lives.get(2));
         } else if (lives.size() == 2) {
+            AssetManager.getHitPlayerSound((int) (Math.random() * 3)).play();
             gamePane.getChildren().remove(lives.get(1));
             lives.remove(lives.get(1));
         } else if (lives.size() == 1) {
@@ -303,9 +336,11 @@ public class GamePane extends Pane {
             Label wins, Label losses) {
         cleanup(gamePane);
         if (win) {
+            AssetManager.getVictorySound().play();
             MenuPane.wincount++;
             wins.setText(String.valueOf(MenuPane.wincount));
         } else {
+            AssetManager.getDefeatSound().play();
             MenuPane.losscount++;
             losses.setText(String.valueOf(MenuPane.losscount));
         }

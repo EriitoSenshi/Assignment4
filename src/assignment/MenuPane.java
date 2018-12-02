@@ -10,6 +10,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.Pane;
+import javafx.scene.media.AudioClip;
 import javafx.scene.media.MediaPlayer;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
@@ -88,6 +89,8 @@ public class MenuPane extends Pane {
 
     public void startGame(Stage stage, MenuPane menuPane, Scene menu) {
         startMusic.stop();
+        AudioClip startGame = AssetManager.getStartSound();
+        startGame.play();
         gameMusic.play();
         GamePane gamePane = new GamePane();
         gamePane.gameLoop(gamePane, stage, menuPane, menu, gameMusic, startMusic, wins, losses);

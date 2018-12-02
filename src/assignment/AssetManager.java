@@ -18,13 +18,18 @@ public class AssetManager {
     static private Background backgroundImage = null;
     static private ImagePattern playerSprite = null;
     static private ArrayList<ImagePattern> enemySprites = new ArrayList<>();
+    static private ImagePattern playerWeapon = null;
+    static private ImagePattern enemyWeapon = null;
+    static private ImagePattern life = null;
+    static private ImagePattern shield = null;
 
     static private Media startBackgroundMusic = null;
     static private Media backgroundMusic = null;
+    static private AudioClip startSound = null;
     static private AudioClip hitEnemySound = null;
-    static private AudioClip hitPlayerSound = null;
-    static private ArrayList<AudioClip> playerShootingSounds = null;
-    static private AudioClip enemyShootingSound = null;
+    static private AudioClip hitShieldSound = null;
+    static private ArrayList<AudioClip> hitPlayerSounds = new ArrayList<>();
+    static private ArrayList<AudioClip> playerShootingSounds = new ArrayList<>();
     static private AudioClip victorySound = null;
     static private AudioClip defeatSound = null;
 
@@ -50,18 +55,30 @@ public class AssetManager {
                         BackgroundPosition.DEFAULT,
                         BackgroundSize.DEFAULT));
 
-        playerSprite = (new ImagePattern(new Image(fileURL("./assets/images/playerSprite.png"))));
+        playerSprite = new ImagePattern(new Image(fileURL("./assets/images/playerSprite.png")));
         enemySprites.add(new ImagePattern(new Image(fileURL("./assets/images/jackFrost.png"))));
         enemySprites.add(new ImagePattern(new Image(fileURL("./assets/images/blackFrost.png"))));
+        playerWeapon = new ImagePattern(new Image(fileURL("./assets/images/playerWeapon.png")));
+        enemyWeapon = new ImagePattern(new Image(fileURL("./assets/images/enemyWeapon.png")));
+        life = new ImagePattern(new Image(fileURL("./assets/images/life.png")));
+        shield = new ImagePattern(new Image(fileURL("./assets/images/shields.png")));
 
         // Preload all music tracks
         backgroundMusic = new Media(fileURL("./assets/music/backgroundMusic.mp3"));
         startBackgroundMusic = new Media(fileURL("./assets/music/startBackgroundMusic.mp3"));
 
         // Preload all sound effects
-        /*hitEnemySound = new AudioClip(fileURL("./assets/soundfx/newPlanet.wav"));
-        playerShootingSound = new AudioClip(fileURL("./assets/soundfx/shooting.wav"));
-        enemyShootingSound = new AudioClip(fileURL("./assets/soundfx/...wav"));*/
+        startSound = new AudioClip(fileURL("./assets/soundfx/gameStart.wav"));
+        playerShootingSounds.add(new AudioClip(fileURL("./assets/soundfx/playerShoot1.wav")));
+        playerShootingSounds.add(new AudioClip(fileURL("./assets/soundfx/playerShoot2.wav")));
+        playerShootingSounds.add(new AudioClip(fileURL("./assets/soundfx/playerShoot3.wav")));
+        hitPlayerSounds.add(new AudioClip(fileURL("./assets/soundfx/playerHit1.wav")));
+        hitPlayerSounds.add(new AudioClip(fileURL("./assets/soundfx/playerHit2.wav")));
+        hitPlayerSounds.add(new AudioClip(fileURL("./assets/soundfx/playerHit3.wav")));
+        hitEnemySound = new AudioClip(fileURL("./assets/soundfx/enemyHitSound.wav"));
+        defeatSound = new AudioClip(fileURL("./assets/soundfx/loss.wav"));
+        victorySound = new AudioClip(fileURL("./assets/soundfx/win.wav"));
+        hitShieldSound = new AudioClip(fileURL("./assets/soundfx/shield.wav"));
     }
 
     public static AudioClip getPlayerShootingSounds(int i) {
@@ -91,7 +108,7 @@ public class AssetManager {
     static public ImagePattern getJackFrost() {
         return enemySprites.get(0);
     }
-    
+
     static public ImagePattern getBlackFrost() {
         return enemySprites.get(1);
     }
@@ -100,12 +117,8 @@ public class AssetManager {
         return hitEnemySound;
     }
 
-    public static AudioClip getHitPlayerSound() {
-        return hitPlayerSound;
-    }
-
-    public static AudioClip getEnemyShootingSound() {
-        return enemyShootingSound;
+    public static AudioClip getHitPlayerSound(int i) {
+        return hitPlayerSounds.get(i);
     }
 
     public static AudioClip getVictorySound() {
@@ -115,4 +128,29 @@ public class AssetManager {
     public static AudioClip getDefeatSound() {
         return defeatSound;
     }
+
+    public static ImagePattern getPlayerWeapon() {
+        return playerWeapon;
+    }
+
+    public static ImagePattern getLife() {
+        return life;
+    }
+
+    public static ImagePattern getEnemyWeapon() {
+        return enemyWeapon;
+    }
+
+    public static ImagePattern getShield() {
+        return shield;
+    }
+
+    public static AudioClip getStartSound() {
+        return startSound;
+    }
+
+    public static AudioClip getHitShieldSound() {
+        return hitShieldSound;
+    }
+
 }

@@ -5,7 +5,6 @@
  */
 package assignment;
 
-import javafx.scene.paint.Paint;
 import javafx.scene.shape.Circle;
 
 /**
@@ -13,7 +12,7 @@ import javafx.scene.shape.Circle;
  * @author hanyalbouz
  */
 public class Life extends Circle{
-    public Life(double centerX, double centerY, double radius, Paint fill) {
-        super(centerX, centerY, radius, fill);
+    public Life(double centerX, double centerY, double radius) {
+        super(centerX, centerY, radius);
     }
 }
