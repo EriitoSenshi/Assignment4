@@ -9,6 +9,8 @@ import java.util.ArrayList;
 import javafx.animation.AnimationTimer;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.Pane;
 import javafx.scene.media.AudioClip;
 import javafx.scene.media.MediaPlayer;
@@ -28,6 +30,7 @@ public class GamePane extends Pane {
     ArrayList<Shield> shields = new ArrayList<>();
     ArrayList<Shield> removeShields = new ArrayList<>();
     Player player = new Player();
+    Scene game;
     Weapon pw;
     ArrayList<Weapon> ew = new ArrayList<>();
     Label lifeLabel = new Label("Lives: ");
@@ -40,7 +43,7 @@ public class GamePane extends Pane {
     public void gameLoop(GamePane gamePane, Stage stage, MenuPane menuPane, Scene menu,
             MediaPlayer gameMusic, MediaPlayer startMusic,
             Label wins, Label losses) {
-        Scene game = new Scene(gamePane);
+        game = new Scene(gamePane);
         makeGamePane(game, stage, gamePane);
         lastFrameTime = 0.0f;
         long initialTime = System.nanoTime();
@@ -60,7 +63,7 @@ public class GamePane extends Pane {
                 });
 
                 game.setOnMouseClicked(event -> {
-                    if (!pw.getCircle().isVisible()) {
+                    if (!pw.getCircle().isVisible() && isGamePlaying) {
                         AssetManager.getPlayerShootingSounds((int) (Math.random() * 3)).play();
                         pw.getCircle().setVisible(true);
                         pw.setPlayerWeapon(pw, player);
@@ -144,6 +147,7 @@ public class GamePane extends Pane {
     public void player(GamePane gamePane, Scene game) {
         if (!gamePane.getChildren().contains(player)) {
             player.makePlayer(gamePane, player);
+            player.setVisible(true);
         }
         game.setOnMouseMoved(event -> {
             player.movePlayer(event, player);
@@ -172,6 +176,7 @@ public class GamePane extends Pane {
             if (i > 23 && i <= 31) {
                 enemies.get(i).getCircle().setFill(AssetManager.getBlackFrost());
             }
+            enemies.get(i).getCircle().setVisible(true);
             gamePane.getChildren().add(enemies.get(i).getCircle());
         }
     }
@@ -181,10 +186,12 @@ public class GamePane extends Pane {
         lifeLabel.setLayoutX(990);
         lifeLabel.setLayoutY(650);
         lifeLabel.setTextFill(Color.RED);
+        lifeLabel.setVisible(true);
         score.setFont(new Font("Comic Sans MS", 28));
         score.setLayoutX(20);
         score.setLayoutY(650);
         score.setTextFill(Color.RED);
+        score.setVisible(true);
         if (!gamePane.getChildren().contains(lifeLabel)) {
             gamePane.getChildren().add(lifeLabel);
         }
@@ -335,37 +342,61 @@ public class GamePane extends Pane {
             MediaPlayer gameMusic, MediaPlayer startMusic,
             Label wins, Label losses) {
         cleanup(gamePane);
+        gameMusic.stop();
         if (win) {
+            gamePane.setBackground(AssetManager.getVictoryImage());
             AssetManager.getVictorySound().play();
             MenuPane.wincount++;
             wins.setText(String.valueOf(MenuPane.wincount));
+            game.setOnKeyPressed((KeyEvent event) -> {
+                if (event.getCode() == KeyCode.ENTER){
+                    stage.setScene(menu);
+                    startMusic.play();
+                }
+            });
+
         } else {
+            gamePane.setBackground(AssetManager.getDefeatImage());
             AssetManager.getDefeatSound().play();
             MenuPane.losscount++;
             losses.setText(String.valueOf(MenuPane.losscount));
+            game.setOnKeyPressed((KeyEvent event) -> {
+                if (event.getCode() == KeyCode.ENTER){
+                    stage.setScene(menu);
+                    startMusic.play();
+                }
+            });
         }
-        stage.setScene(menu);
-        gameMusic.stop();
-        startMusic.play();
-
-        isGamePlaying = false;
     }
 
     public void cleanup(GamePane gamePane) {
         if (enemies != null) {
+            gamePane.getChildren().removeAll(enemies);
+            for (Enemy enemy : enemies) {
+                enemy.getCircle().setVisible(false);
+            }
             removeEnemies.addAll(enemies);
             enemies.removeAll(removeEnemies);
-            gamePane.getChildren().removeAll(enemies);
+
         }
         if (lives != null) {
-            lives.removeAll(lives);
             gamePane.getChildren().removeAll(lives);
+            lives.removeAll(lives);
+
         }
         if (shields != null) {
+            gamePane.getChildren().removeAll(shields);
             removeShields.addAll(shields);
             shields.removeAll(removeShields);
-            gamePane.getChildren().removeAll(shields);
+
         }
+        for (Weapon enemyWeapon: ew){
+            enemyWeapon.getCircle().setVisible(false);
+        }
+        player.setVisible(false);
+        lifeLabel.setVisible(false);
+        score.setVisible(false);
+        isGamePlaying = false;
     }
 
 }

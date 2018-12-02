@@ -16,6 +16,8 @@ public class AssetManager {
 
     static private Background startBackgroundImage = null;
     static private Background backgroundImage = null;
+    static private Background victoryImage = null;
+    static private Background defeatImage = null;
     static private ImagePattern playerSprite = null;
     static private ArrayList<ImagePattern> enemySprites = new ArrayList<>();
     static private ImagePattern playerWeapon = null;
@@ -50,6 +52,22 @@ public class AssetManager {
         Image background = new Image(fileURL("./assets/images/background.png"));
         backgroundImage = new Background(
                 new BackgroundImage(background,
+                        BackgroundRepeat.NO_REPEAT,
+                        BackgroundRepeat.NO_REPEAT,
+                        BackgroundPosition.DEFAULT,
+                        BackgroundSize.DEFAULT));
+
+        Image victoryBackground = new Image(fileURL("./assets/images/victoryBackground.png"));
+        victoryImage = new Background(
+                new BackgroundImage(victoryBackground,
+                        BackgroundRepeat.NO_REPEAT,
+                        BackgroundRepeat.NO_REPEAT,
+                        BackgroundPosition.DEFAULT,
+                        BackgroundSize.DEFAULT));
+
+        Image defeatBackground = new Image(fileURL("./assets/images/defeatBackground.png"));
+        defeatImage = new Background(
+                new BackgroundImage(defeatBackground,
                         BackgroundRepeat.NO_REPEAT,
                         BackgroundRepeat.NO_REPEAT,
                         BackgroundPosition.DEFAULT,
@@ -151,6 +169,14 @@ public class AssetManager {
 
     public static AudioClip getHitShieldSound() {
         return hitShieldSound;
+    }
+
+    public static Background getVictoryImage() {
+        return victoryImage;
+    }
+
+    public static Background getDefeatImage() {
+        return defeatImage;
     }
 
 }
