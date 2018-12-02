@@ -203,11 +203,9 @@ public class GamePane extends Pane {
     }
 
     public void makeEnemyWeapon(GamePane gamePane) {
-
         Vector2D ewPosition = new Vector2D(0, 0);
         Vector2D ewVelocity = new Vector2D(0.0f, 450.0f);
         Vector2D ewAcceleration = new Vector2D(0, 0);
-
         if (ew.isEmpty()) {
             for (int i = 0; i < 3; i++) {
                 ew.add(new Weapon(ewPosition, ewVelocity, ewAcceleration, 10));
@@ -218,7 +216,6 @@ public class GamePane extends Pane {
             enemyWeapon.getCircle().setVisible(false);
             gamePane.getChildren().add(enemyWeapon.getCircle());
         }
-
     }
 
     public void playerWeaponToEnemy(Weapon pw, Enemy enemy, GamePane gamePane) {
