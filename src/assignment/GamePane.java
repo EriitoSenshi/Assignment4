@@ -87,7 +87,7 @@ public class GamePane extends Pane {
                             wins, losses);
                 }
 
-                int randomNumber = (int) (Math.random() * 300);
+                int randomNumber = (int) (Math.random() * 150);
                 int random = (int) (Math.random() * (enemies.size() - 1));
 
                 if (randomNumber == 50) {
@@ -96,13 +96,13 @@ public class GamePane extends Pane {
                         ew.get(0).setEnemyWeapon(ew.get(0), enemies.get(random));
                     }
                 }
-                if (randomNumber == 150) {
+                if (randomNumber == 100) {
                     if (!ew.get(1).getCircle().isVisible() && isGamePlaying) {
                         ew.get(1).getCircle().setVisible(true);
                         ew.get(1).setEnemyWeapon(ew.get(1), enemies.get(random));
                     }
                 }
-                if (randomNumber == 250) {
+                if (randomNumber == 150) {
                     if (!ew.get(2).getCircle().isVisible() && isGamePlaying) {
                         ew.get(2).getCircle().setVisible(true);
                         ew.get(2).setEnemyWeapon(ew.get(2), enemies.get(random));
