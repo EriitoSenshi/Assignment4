@@ -32,6 +32,8 @@ public class GamePane extends Pane {
     private Player player = new Player();
     private Scene game;
     private Weapon pw;
+    private MediaPlayer victoryMusic;
+    private MediaPlayer defeatMusic;
     private ArrayList<Weapon> ew = new ArrayList<>();
     private Label lifeLabel = new Label("Lives: ");
     private Label score = new Label("Score: 0");
@@ -236,7 +238,6 @@ public class GamePane extends Pane {
         if (pw.getCircle().isVisible()) {
             if (changingDistance <= fixedDistance) {
                 AudioClip hitEnemy = AssetManager.getHitEnemySound();
-                hitEnemy.setVolume(1.0);
                 hitEnemy.play();
                 scoreCount += 10;
                 score.setText("Score: " + scoreCount);
@@ -353,13 +354,20 @@ public class GamePane extends Pane {
             Label wins, Label losses) {
         cleanup(gamePane);
         gameMusic.stop();
+        victoryMusic = new MediaPlayer(AssetManager.getVictoryMusic());
+        defeatMusic = new MediaPlayer(AssetManager.getDefeatMusic());
         if (win) {
             gamePane.setBackground(AssetManager.getVictoryImage());
+            victoryMusic.play();
+            victoryMusic.setOnEndOfMedia(() -> {
+                    victoryMusic.play();
+                });
             AssetManager.getVictorySound().play();
             MenuPane.wincount++;
             wins.setText(String.valueOf(MenuPane.wincount));
             game.setOnKeyPressed((KeyEvent event) -> {
                 if (event.getCode() == KeyCode.ENTER) {
+                    victoryMusic.stop();
                     stage.setScene(menu);
                     startMusic.play();
                 }
@@ -367,11 +375,16 @@ public class GamePane extends Pane {
 
         } else {
             gamePane.setBackground(AssetManager.getDefeatImage());
+            defeatMusic.play();
+            defeatMusic.setOnEndOfMedia(() -> {
+                    defeatMusic.play();
+                });
             AssetManager.getDefeatSound().play();
             MenuPane.losscount++;
             losses.setText(String.valueOf(MenuPane.losscount));
             game.setOnKeyPressed((KeyEvent event) -> {
                 if (event.getCode() == KeyCode.ENTER) {
+                    defeatMusic.stop();
                     stage.setScene(menu);
                     startMusic.play();
                 }

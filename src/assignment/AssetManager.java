@@ -27,6 +27,8 @@ public class AssetManager {
 
     static private Media startBackgroundMusic = null;
     static private Media backgroundMusic = null;
+    static private Media victoryMusic = null;
+    static private Media defeatMusic = null;
     static private AudioClip startSound = null;
     static private AudioClip hitEnemySound = null;
     static private AudioClip hitShieldSound = null;
@@ -84,6 +86,8 @@ public class AssetManager {
         // Preload all music tracks
         backgroundMusic = new Media(fileURL("./assets/music/backgroundMusic.mp3"));
         startBackgroundMusic = new Media(fileURL("./assets/music/startBackgroundMusic.mp3"));
+        victoryMusic = new Media(fileURL("./assets/music/victoryMusic.mp3"));
+        defeatMusic = new Media(fileURL("./assets/music/defeatMusic.mp3"));
 
         // Preload all sound effects
         startSound = new AudioClip(fileURL("./assets/soundfx/gameStart.wav"));
@@ -177,6 +181,14 @@ public class AssetManager {
 
     public static Background getDefeatImage() {
         return defeatImage;
+    }
+
+    public static Media getVictoryMusic() {
+        return victoryMusic;
+    }
+
+    public static Media getDefeatMusic() {
+        return defeatMusic;
     }
 
 }
