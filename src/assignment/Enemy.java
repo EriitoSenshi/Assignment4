@@ -24,6 +24,7 @@ public class Enemy extends GameObject {
                 enemies.forEach((e) -> {
 
                     e.getVelocity().setX(Math.abs(e.getVelocity().getX()));
+                    e.setPosition(new Vector2D(e.getCircle().getCenterX(), e.getCircle().getCenterY() + 25));
 
                 });
             }
@@ -34,6 +35,7 @@ public class Enemy extends GameObject {
                 enemies.forEach((e) -> {
 
                     e.getVelocity().setX(-Math.abs(e.getVelocity().getX()));
+                    e.setPosition(new Vector2D(e.getCircle().getCenterX(), e.getCircle().getCenterY() + 25));
 
                 });
             }
