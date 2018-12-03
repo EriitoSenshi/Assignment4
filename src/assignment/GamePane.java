@@ -24,21 +24,21 @@ import javafx.stage.Stage;
  */
 public class GamePane extends Pane {
 
-    ArrayList<Enemy> enemies = new ArrayList<>();
-    ArrayList<Enemy> removeEnemies = new ArrayList<>();
-    ArrayList<Life> lives = new ArrayList<>();
-    ArrayList<Shield> shields = new ArrayList<>();
-    ArrayList<Shield> removeShields = new ArrayList<>();
-    Player player = new Player();
-    Scene game;
-    Weapon pw;
-    ArrayList<Weapon> ew = new ArrayList<>();
-    Label lifeLabel = new Label("Lives: ");
-    Label score = new Label("Score: 0");
-    int scoreCount = 0;
-    double lastFrameTime = 0.0;
-    boolean isGamePlaying = true;
-    boolean win = false;
+    private ArrayList<Enemy> enemies = new ArrayList<>();
+    private ArrayList<Enemy> removeEnemies = new ArrayList<>();
+    private ArrayList<Life> lives = new ArrayList<>();
+    private ArrayList<Shield> shields = new ArrayList<>();
+    private ArrayList<Shield> removeShields = new ArrayList<>();
+    private Player player = new Player();
+    private Scene game;
+    private Weapon pw;
+    private ArrayList<Weapon> ew = new ArrayList<>();
+    private Label lifeLabel = new Label("Lives: ");
+    private Label score = new Label("Score: 0");
+    private int scoreCount = 0;
+    private double lastFrameTime = 0.0;
+    private boolean isGamePlaying = true;
+    private boolean win = false;
 
     public void gameLoop(GamePane gamePane, Stage stage, MenuPane menuPane, Scene menu,
             MediaPlayer gameMusic, MediaPlayer startMusic,
@@ -124,6 +124,7 @@ public class GamePane extends Pane {
                         enemiesToShields(enemy, shield, gamePane);
                     });
                 });
+                shields.removeAll(removeShields);
 
             }
         }.start();
@@ -158,7 +159,7 @@ public class GamePane extends Pane {
         for (int i = 0; i < 4; i++) {
             for (int j = 1; j <= 8; j++) {
                 Vector2D enemyPosition = new Vector2D(305 + (j * 70), 40 + (i * 70));
-                Vector2D enemyVelocity = new Vector2D(100.0f, 1.5f);
+                Vector2D enemyVelocity = new Vector2D(100.0f, 2.0f);
                 Vector2D enemyAcceleration = new Vector2D(0, 0);
                 enemies.add(new Enemy(enemyPosition, enemyVelocity, enemyAcceleration, 30));
             }

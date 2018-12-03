@@ -21,10 +21,10 @@ import javafx.stage.Stage;
  */
 public class MenuPane extends Pane {
 
-    MediaPlayer startMusic;
-    MediaPlayer gameMusic;
-    Label victories;
-    Label defeats;
+    private MediaPlayer startMusic;
+    private MediaPlayer gameMusic;
+    private Label victories;
+    private Label defeats;
     public static Label wins;
     public static Label losses;
     public static int losscount = 0;
