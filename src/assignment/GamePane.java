@@ -360,8 +360,8 @@ public class GamePane extends Pane {
             gamePane.setBackground(AssetManager.getVictoryImage());
             victoryMusic.play();
             victoryMusic.setOnEndOfMedia(() -> {
-                    victoryMusic.play();
-                });
+                victoryMusic.play();
+            });
             AssetManager.getVictorySound().play();
             MenuPane.wincount++;
             wins.setText(String.valueOf(MenuPane.wincount));
@@ -377,8 +377,8 @@ public class GamePane extends Pane {
             gamePane.setBackground(AssetManager.getDefeatImage());
             defeatMusic.play();
             defeatMusic.setOnEndOfMedia(() -> {
-                    defeatMusic.play();
-                });
+                defeatMusic.play();
+            });
             AssetManager.getDefeatSound().play();
             MenuPane.losscount++;
             losses.setText(String.valueOf(MenuPane.losscount));
