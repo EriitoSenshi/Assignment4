@@ -89,7 +89,7 @@ public class GamePane extends Pane {
                             wins, losses);
                 }
 
-                int randomNumber = (int) (Math.random() * 150);
+                int randomNumber = (int) (Math.random() * 300);
                 int random = (int) (Math.random() * (enemies.size() - 1));
 
                 if (randomNumber == 50) {
@@ -108,6 +108,18 @@ public class GamePane extends Pane {
                     if (!ew.get(2).getCircle().isVisible() && isGamePlaying) {
                         ew.get(2).getCircle().setVisible(true);
                         ew.get(2).setEnemyWeapon(ew.get(2), enemies.get(random));
+                    }
+                }
+                if (randomNumber == 200) {
+                    if (!ew.get(3).getCircle().isVisible() && isGamePlaying) {
+                        ew.get(3).getCircle().setVisible(true);
+                        ew.get(3).setEnemyWeapon(ew.get(3), enemies.get(random));
+                    }
+                }
+                if (randomNumber == 250) {
+                    if (!ew.get(4).getCircle().isVisible() && isGamePlaying) {
+                        ew.get(4).getCircle().setVisible(true);
+                        ew.get(4).setEnemyWeapon(ew.get(4), enemies.get(random));
                     }
                 }
 
@@ -220,7 +232,7 @@ public class GamePane extends Pane {
         Vector2D ewVelocity = new Vector2D(0.0f, 450.0f);
         Vector2D ewAcceleration = new Vector2D(0, 0);
         if (ew.isEmpty()) {
-            for (int i = 0; i < 3; i++) {
+            for (int i = 0; i < 5; i++) {
                 ew.add(new Weapon(ewPosition, ewVelocity, ewAcceleration, 10));
             }
         }
@@ -280,7 +292,6 @@ public class GamePane extends Pane {
         double fixedDistance = ew.getCircle().getRadius() + shield.getRadius();
         if (ew.getCircle().isVisible()) {
             if (changingDistance <= fixedDistance) {
-                AssetManager.getHitShieldSound().play();
                 ew.getCircle().setVisible(false);
             }
         }
